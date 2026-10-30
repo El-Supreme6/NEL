@@ -1089,137 +1089,53 @@ if (matchesPage) {
    STANDINGS PAGE
 ========================= */
 
-const standingsBody =
-    document.querySelector("#standings-body");
 
-if (standingsBody) {
+const standingsBody = document.querySelector("#standings-body");
 
-    const standingsData = [
-        {
-            name: "Steelen München",
-            logo: "images/steelen-munchen.png",
-            played: 0,
-            wins: 0,
-            draws: 0,
-            losses: 0,
-            gf: 0,
-            ga: 0
-        },
+async function loadStandings() {
+    const { data, error } = await db.from("standings").select("*");
 
-        {
-            name: "RPB",
-            logo: "images/rpb.png",
-            played: 0,
-            wins: 0,
-            draws: 0,
-            losses: 0,
-            gf: 0,
-            ga: 0
-        },
+    if (error || !data) {
+        console.error(error);
+        standingsBody.innerHTML =
+            `<tr><td colspan="8" class="standings-loading">Could not load standings: ${esc(error && error.message)}</td></tr>`;
+        return;
+    }
 
-        {
-            name: "Livergen",
-            logo: "images/livergen.png",
-            played: 0,
-            wins: 0,
-            draws: 0,
-            losses: 0,
-            gf: 0,
-            ga: 0
-        },
+    const teams = data.map(t => ({
+        ...t, points: Number(t.points), gd: Number(t.gd), gf: Number(t.gf)
+    }));
 
-        {
-            name: "Bastard München",
-            logo: "images/bastard-munchen.png",
-            played: 0,
-            wins: 0,
-            draws: 0,
-            losses: 0,
-            gf: 0,
-            ga: 0
-        },
+    teams.sort((a, b) =>
+        b.points - a.points || b.gd - a.gd || b.gf - a.gf || a.name.localeCompare(b.name));
 
-        {
-            name: "Paris X Gen",
-            logo: "images/pxg.png",
-            played: 0,
-            wins: 0,
-            draws: 0,
-            losses: 0,
-            gf: 0,
-            ga: 0
-        },
+    standingsBody.innerHTML = "";
 
-        {
-            name: "Arsenaly",
-            logo: "images/arsenaly.png",
-            played: 0,
-            wins: 0,
-            draws: 0,
-            losses: 0,
-            gf: 0,
-            ga: 0
-        },
+    teams.forEach((team, i) => {
+        const row = document.createElement("tr");
+        if (i < 3) row.classList.add("top-position");
 
-        {
-            name: "FC Barcha",
-            logo: "images/fc-barcha.png",
-            played: 0,
-            wins: 0,
-            draws: 0,
-            losses: 0,
-            gf: 0,
-            ga: 0
-        },
+        const gd = team.gd > 0 ? `+${team.gd}` : team.gd;
+        const logo = team.logo_url
+            ? `<img src="${esc(team.logo_url)}" alt="${esc(team.name)}">`
+            : `<div class="team-placeholder">${esc(team.name.charAt(0))}</div>`;
 
-        {
-            name: "Tonderia Vitoria Bola FC",
-            logo: "images/tvb-fc.png",
-            played: 0,
-            wins: 0,
-            draws: 0,
-            losses: 0,
-            gf: 0,
-            ga: 0
-        },
+        row.innerHTML = `
+            <td class="position">${i + 1}</td>
+            <td><div class="team-cell">${logo}<strong>${esc(team.name)}</strong></div></td>
+            <td>${team.played}</td><td>${team.wins}</td><td>${team.draws}</td><td>${team.losses}</td>
+            <td>${gd}</td><td class="points">${team.points}</td>`;
 
-        {
-            name: "FC ROYALE",
-            logo: "images/fc-royale.png",
-            played: 0,
-            wins: 0,
-            draws: 0,
-            losses: 0,
-            gf: 0,
-            ga: 0
-        },
+        row.style.cursor = "pointer";
+        row.addEventListener("click", () => {
+            window.location.href = `team.html?id=${encodeURIComponent(team.slug)}`;
+        });
 
-        {
-            name: "Newshine United",
-            logo: "images/newshine-united.png",
-            played: 0,
-            wins: 0,
-            draws: 0,
-            losses: 0,
-            gf: 0,
-            ga: 0
-        }
-    ];
-
-
-    /* =========================
-       CALCULATE STATS
-    ========================= */
-
-    standingsData.forEach(team => {
-
-        team.gd = team.gf - team.ga;
-
-        team.points =
-            (team.wins * 3) +
-            team.draws;
-
+        standingsBody.appendChild(row);
     });
+}
+
+if (standingsBody) loadStandings();
 
 
     /* =========================
@@ -1537,10 +1453,6 @@ if (teamName) {
     }
 
 }
-/* =========================
-   CARD CLICK NAVIGATION
-========================= */
-
 
 /* =========================
    MATCHES PAGE
@@ -1573,70 +1485,6 @@ if (document.querySelector(".matches-page")) {
             
             window.location.href =
                 `match.html?id=${matchId}`;
-            
-        });
-        
-    });
-    
-}
-
-
-/* =========================
-   STANDINGS PAGE
-========================= */
-
-if (document.querySelector(".standings-page")) {
-    
-    const teamIds = {
-        "Steelen München": "steelen-munchen",
-        "RPB": "rpb",
-        "Livergen": "livergen",
-        "Bastard München": "bastard-munchen",
-        "Paris X Gen": "pxg",
-        "Arsenaly": "arsenaly",
-        "FC Barcha": "fc-barcha",
-        "Tonderia Vitoria Bola FC": "tvb-fc",
-        "FC ROYALE": "fc-royale",
-        "Newshine United": "newshine-united"
-    };
-    
-    const standingsRows =
-        document.querySelectorAll(
-            "#standings-body tr"
-        );
-    
-    standingsRows.forEach(row => {
-        
-        const teamNameElement =
-            row.querySelector(
-                ".team-cell strong"
-            );
-        
-        if (!teamNameElement) {
-            return;
-        }
-        
-        const teamName =
-            teamNameElement.textContent.trim();
-        
-        const teamId =
-            teamIds[teamName];
-        
-        if (!teamId) {
-            return;
-        }
-        
-        row.style.cursor = "pointer";
-        
-        row.addEventListener("click", event => {
-            
-            /* Don't interfere with links/buttons */
-            if (event.target.closest("a, button")) {
-                return;
-            }
-            
-            window.location.href =
-                `team.html?id=${teamId}`;
             
         });
         
