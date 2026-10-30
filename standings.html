@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<link rel="icon" href="images/nel-logo.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Standings | Neo Egoist League</title>
+    
+    <meta name="description" content="Neo Egoist League: fixtures, standings, teams, players and transfers.">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+
+        <a href="index.html" class="logo">
+    <img src="images/nel-logo.png" alt="NEL Logo">
+</a>
+
+        <div class="nav-links">
+            <a href="index.html">🏠 Home</a>
+            <a href="matches.html">⚽ Matches</a>
+            <a href="standings.html" class="active">🏆 Standings</a>
+            <a href="./teams.html">👥 Teams</a>
+            <a href="players.html">👤 Players</a>
+            <a href="market.html">🛒 Market</a>
+            <a href="stats.html">📊 Stats</a>
+            <a href="news.html">📰 News</a>
+            <a href="about.html">ℹ️ About</a>
+        </div>
+
+        <a class="discord-button" href="https://discord.gg/FYT7ujxwv">
+            Discord
+        </a>
+
+        <button class="menu-toggle" aria-label="Open navigation menu">
+            ☰
+        </button>
+
+    </nav>
+
+
+    <!-- Main -->
+    <main class="standings-page">
+
+        <!-- Page Header -->
+        <section class="standings-header">
+
+            <p class="eyebrow">
+                NEO EGOIST LEAGUE
+            </p>
+
+            <h1>
+                STANDINGS
+            </h1>
+
+            <p class="standings-description">
+                Track every club's position throughout the NEL season.
+            </p>
+
+        </section>
+
+
+        <!-- Standings -->
+        <section class="section standings-section">
+
+            <div class="section-header">
+                <h2>LEAGUE TABLE</h2>
+            </div>
+
+
+            <div class="standings-table-wrapper">
+
+                <table class="standings-table">
+
+                    <thead>
+
+                        <tr>
+                            <th>POS</th>
+                            <th>TEAM</th>
+                            <th>P</th>
+                            <th>W</th>
+                            <th>D</th>
+                            <th>L</th>
+                            <th>GD</th>
+                            <th>PTS</th>
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="standings-body">
+    
+    <tr>
+        <td colspan="8" class="standings-loading">
+            Loading standings...
+        </td>
+    </tr>
+    
+</tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- Footer -->
+    <footer>
+
+        <h2>NEL</h2>
+
+        <p>
+            ONE LEAGUE. ONE GOAL. BECOME THE BEST.
+        </p>
+
+        <div>
+            Home · Matches · Standings · Teams · Players · Market · Stats · News · About
+        </div>
+
+        <small>
+            © 2026 Neo Egoist League
+        </small>
+
+    </footer>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>

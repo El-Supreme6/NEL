@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<link rel="icon" href="images/nel-logo.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Stats | Neo Egoist League</title>
+    
+    <meta name="description" content="Neo Egoist League: fixtures, standings, teams, players and transfers.">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+
+        <a href="index.html" class="logo">
+    <img src="images/nel-logo.png" alt="NEL Logo">
+</a>
+
+        <div class="nav-links">
+            <a href="index.html">🏠 Home</a>
+            <a href="matches.html">⚽ Matches</a>
+            <a href="standings.html">🏆 Standings</a>
+            <a href="teams.html">👥 Teams</a>
+            <a href="players.html">👤 Players</a>
+            <a href="market.html">🛒 Market</a>
+            <a href="stats.html" class="active">📊 Stats</a>
+            <a href="news.html">📰 News</a>
+            <a href="about.html">ℹ️ About</a>
+        </div>
+
+        <a class="discord-button" href="https://discord.gg/FYT7ujxwv">
+            Discord
+        </a>
+
+        <button class="menu-toggle" aria-label="Open navigation menu">
+            ☰
+        </button>
+
+    </nav>
+
+
+    <main class="stats-page">
+
+
+        <!-- Stats Header -->
+        <section class="stats-header">
+
+            <p class="eyebrow">
+                NEO EGOIST LEAGUE
+            </p>
+
+            <h1>
+                LEAGUE STATS
+            </h1>
+
+            <p class="stats-description">
+                Track the performances, achievements, and numbers behind the league.
+            </p>
+
+        </section>
+
+
+        <!-- Import Stats -->
+        <section class="section stats-import-section">
+
+            <div class="section-header">
+                <div>
+                    <h2>IMPORT MATCH STATS</h2>
+
+                    <p class="section-subtitle">
+                        Upload a match statistics image to extract player performances.
+                    </p>
+                </div>
+            </div>
+
+
+            <div class="stats-upload">
+
+                <div class="upload-icon">
+                    📸
+                </div>
+
+                <h3>
+                    Upload Match Stats
+                </h3>
+
+                <p>
+                    Upload a screenshot of the match statistics.
+                    NEL will extract the information for review.
+                </p>
+
+                <label for="stats-image" class="upload-button">
+                    SELECT IMAGE
+                </label>
+
+                <input
+                    type="file"
+                    id="stats-image"
+                    accept="image/png, image/jpeg, image/jpg"
+                    hidden
+                >
+
+                <small>
+                    PNG, JPG or JPEG
+                </small>
+
+            </div>
+
+        </section>
+
+
+        <!-- Extraction Preview -->
+        <section class="section stats-review-section">
+
+            <div class="section-header">
+
+                <div>
+                    <h2>EXTRACTED STATS</h2>
+
+                    <p class="section-subtitle">
+                        Review extracted information before confirming it.
+                    </p>
+                </div>
+
+                <span class="review-status">
+                    AWAITING REVIEW
+                </span>
+
+            </div>
+
+
+            <div class="stats-review">
+
+                <div class="review-summary">
+
+                    <div>
+                        <span>PLAYERS IDENTIFIED</span>
+                        <strong>3</strong>
+                    </div>
+
+                    <div>
+                        <span>STATS EXTRACTED</span>
+                        <strong>48</strong>
+                    </div>
+
+                    <div>
+                        <span>STATUS</span>
+                        <strong>REVIEW</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="stats-table-wrapper">
+
+                    <table class="stats-table">
+
+                        <thead>
+
+                            <tr>
+                                <th>PLAYER</th>
+                                <th>GOALS</th>
+                                <th>ASSISTS</th>
+                                <th>INTERCEPTS</th>
+                                <th>PASSES</th>
+                                <th>SAVES</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            <tr>
+                                <td>Player Alpha</td>
+                                <td>2</td>
+                                <td>1</td>
+                                <td>3</td>
+                                <td>18</td>
+                                <td>0</td>
+                            </tr>
+
+                            <tr>
+                                <td>Player Beta</td>
+                                <td>0</td>
+                                <td>2</td>
+                                <td>5</td>
+                                <td>25</td>
+                                <td>0</td>
+                            </tr>
+
+                            <tr>
+                                <td>Player Gamma</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>1</td>
+                                <td>12</td>
+                                <td>7</td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                <div class="review-actions">
+
+                    <button class="reject-button">
+                        REJECT
+                    </button>
+
+                    <button class="confirm-button">
+                        CONFIRM STATS
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Top Scorers -->
+        <section class="section">
+
+            <div class="section-header">
+
+                <h2>🥇 TOP SCORERS</h2>
+
+                <a href="#">
+                    VIEW ALL →
+                </a>
+
+            </div>
+
+
+            <div class="leaderboard">
+
+                <div class="leaderboard-row">
+
+                    <strong class="rank">
+                        01
+                    </strong>
+
+                    <div class="leader-player">
+                        <div class="leader-avatar">
+                            09
+                        </div>
+
+                        <div>
+                            <strong>Player Alpha</strong>
+                            <span>Steelen München · ST</span>
+                        </div>
+                    </div>
+
+                    <strong class="leader-stat">
+                        18
+                    </strong>
+
+                </div>
+
+
+                <div class="leaderboard-row">
+
+                    <strong class="rank">
+                        02
+                    </strong>
+
+                    <div class="leader-player">
+                        <div class="leader-avatar">
+                            10
+                        </div>
+
+                        <div>
+                            <strong>Player Beta</strong>
+                            <span>Team Alpha · CAM</span>
+                        </div>
+                    </div>
+
+                    <strong class="leader-stat">
+                        15
+                    </strong>
+
+                </div>
+
+
+                <div class="leaderboard-row">
+
+                    <strong class="rank">
+                        03
+                    </strong>
+
+                    <div class="leader-player">
+                        <div class="leader-avatar">
+                            11
+                        </div>
+
+                        <div>
+                            <strong>Player Gamma</strong>
+                            <span>Team Beta · RW</span>
+                        </div>
+                    </div>
+
+                    <strong class="leader-stat">
+                        12
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Top Assists -->
+        <section class="section">
+
+            <div class="section-header">
+
+                <h2>🎯 TOP ASSISTS</h2>
+
+                <a href="#">
+                    VIEW ALL →
+                </a>
+
+            </div>
+
+
+            <div class="leaderboard">
+
+                <div class="leaderboard-row">
+
+                    <strong class="rank">
+                        01
+                    </strong>
+
+                    <div class="leader-player">
+                        <div class="leader-avatar">
+                            08
+                        </div>
+
+                        <div>
+                            <strong>Player Delta</strong>
+                            <span>Team Gamma · CM</span>
+                        </div>
+                    </div>
+
+                    <strong class="leader-stat">
+                        14
+                    </strong>
+
+                </div>
+
+
+                <div class="leaderboard-row">
+
+                    <strong class="rank">
+                        02
+                    </strong>
+
+                    <div class="leader-player">
+                        <div class="leader-avatar">
+                            07
+                        </div>
+
+                        <div>
+                            <strong>Player Epsilon</strong>
+                            <span>Team Delta · CAM</span>
+                        </div>
+                    </div>
+
+                    <strong class="leader-stat">
+                        11
+                    </strong>
+
+                </div>
+
+
+                <div class="leaderboard-row">
+
+                    <strong class="rank">
+                        03
+                    </strong>
+
+                    <div class="leader-player">
+                        <div class="leader-avatar">
+                            17
+                        </div>
+
+                        <div>
+                            <strong>Player Zeta</strong>
+                            <span>Steelen München · LW</span>
+                        </div>
+                    </div>
+
+                    <strong class="leader-stat">
+                        9
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Goalkeeper Leaders -->
+        <section class="section">
+
+            <div class="section-header">
+
+                <h2>🧤 GOALKEEPER LEADERS</h2>
+
+            </div>
+
+
+            <div class="leaderboard">
+
+                <div class="leaderboard-row goalkeeper-row">
+
+                    <strong class="rank">
+                        01
+                    </strong>
+
+                    <div class="leader-player">
+
+                        <div class="leader-avatar">
+                            01
+                        </div>
+
+                        <div>
+                            <strong>Player Eta</strong>
+                            <span>Team Gamma · GK</span>
+                        </div>
+
+                    </div>
+
+                    <div class="keeper-stats">
+                        <span>SAVES</span>
+                        <strong>42</strong>
+                    </div>
+
+                    <div class="keeper-stats">
+                        <span>CLEAN SHEETS</span>
+                        <strong>7</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="leaderboard-row goalkeeper-row">
+
+                    <strong class="rank">
+                        02
+                    </strong>
+
+                    <div class="leader-player">
+
+                        <div class="leader-avatar">
+                            13
+                        </div>
+
+                        <div>
+                            <strong>Player Theta</strong>
+                            <span>Team Beta · GK</span>
+                        </div>
+
+                    </div>
+
+                    <div class="keeper-stats">
+                        <span>SAVES</span>
+                        <strong>36</strong>
+                    </div>
+
+                    <div class="keeper-stats">
+                        <span>CLEAN SHEETS</span>
+                        <strong>5</strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Awards -->
+        <section class="section awards-grid-section">
+
+            <div class="awards-column">
+
+                <div class="section-header">
+                    <h2>👑 MVP LEADERS</h2>
+                </div>
+
+                <div class="mini-leaderboard">
+
+                    <div>
+                        <span>01</span>
+                        <strong>Player Alpha</strong>
+                        <b>5</b>
+                    </div>
+
+                    <div>
+                        <span>02</span>
+                        <strong>Player Delta</strong>
+                        <b>3</b>
+                    </div>
+
+                    <div>
+                        <span>03</span>
+                        <strong>Player Beta</strong>
+                        <b>2</b>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="awards-column">
+
+                <div class="section-header">
+                    <h2>🥇 MOTM LEADERS</h2>
+                </div>
+
+                <div class="mini-leaderboard">
+
+                    <div>
+                        <span>01</span>
+                        <strong>Player Gamma</strong>
+                        <b>6</b>
+                    </div>
+
+                    <div>
+                        <span>02</span>
+                        <strong>Player Alpha</strong>
+                        <b>4</b>
+                    </div>
+
+                    <div>
+                        <span>03</span>
+                        <strong>Player Zeta</strong>
+                        <b>3</b>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Performance Stats -->
+        <section class="section performance-section">
+
+            <div class="section-header">
+
+                <div>
+                    <h2>📈 PERFORMANCE STATS</h2>
+
+                    <p class="section-subtitle">
+                        Statistics used by the NEL player value system.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="performance-grid">
+
+                <div class="performance-card">
+                    <span>⚽ GOALS</span>
+                    <strong>+1M</strong>
+                    <small>Per goal</small>
+                </div>
+
+                <div class="performance-card">
+                    <span>🎯 ASSISTS</span>
+                    <strong>+500K</strong>
+                    <small>Per assist</small>
+                </div>
+
+                <div class="performance-card">
+                    <span>🛡️ INTERCEPTS</span>
+                    <strong>+100K</strong>
+                    <small>Per intercept</small>
+                </div>
+
+                <div class="performance-card">
+                    <span>🥏 PASSES</span>
+                    <strong>+50K</strong>
+                    <small>Per pass</small>
+                </div>
+
+                <div class="performance-card">
+                    <span>🧤 SAVES</span>
+                    <strong>+250K</strong>
+                    <small>Per save</small>
+                </div>
+
+                <div class="performance-card">
+                    <span>🥇 MVP</span>
+                    <strong>+2M</strong>
+                    <small>Per award</small>
+                </div>
+
+                <div class="performance-card">
+                    <span>🥈 MOTM</span>
+                    <strong>+1.5M</strong>
+                    <small>Per award</small>
+                </div>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+    <!-- Footer -->
+    <footer>
+
+        <h2>NEL</h2>
+
+        <p>
+            ONE LEAGUE. ONE GOAL. BECOME THE BEST.
+        </p>
+
+        <div>
+            Home · Matches · Standings · Teams · Players · Market · Stats · News · About
+        </div>
+
+        <small>
+            © 2026 Neo Egoist League
+        </small>
+
+    </footer>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>

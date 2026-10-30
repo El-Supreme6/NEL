@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<link rel="icon" href="images/nel-logo.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Matches | Neo Egoist League</title>
+    
+    <meta name="description" content="Neo Egoist League: fixtures, standings, teams, players and transfers.">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+
+        <a href="index.html" class="logo">
+    <img src="images/nel-logo.png" alt="NEL Logo">
+</a>
+
+        <div class="nav-links">
+            <a href="index.html">🏠 Home</a>
+            <a href="matches.html" class="active">⚽ Matches</a>
+            <a href="./standings.html">🏆 Standings</a>
+            <a href="teams.html">👥 Teams</a>
+            <a href="players.html">👤 Players</a>
+            <a href="market.html">🛒 Market</a>
+            <a href="stats.html">📊 Stats</a>
+            <a href="news.html">📰 News</a>
+            <a href="about.html">ℹ️ About</a>
+        </div>
+
+        <a class="discord-button" href="https://discord.gg/FYT7ujxwv">
+            Discord
+        </a>
+
+        <button class="menu-toggle" aria-label="Open navigation menu">
+            ☰
+        </button>
+
+    </nav>
+
+
+    <!-- Main -->
+    <main class="matches-page">
+
+        <!-- Page Header -->
+        <section class="matches-header">
+
+            <p class="eyebrow">
+                NEO EGOIST LEAGUE
+            </p>
+
+            <h1>
+                MATCHES
+            </h1>
+
+            <p class="matches-description">
+                Follow every NEL fixture, result, and matchday.
+            </p>
+
+        </section>
+
+
+        <!-- Match Filters -->
+        <section class="match-filters">
+
+            <button class="filter-button active">
+                ALL
+            </button>
+
+            <button class="filter-button">
+                FEATURED
+            </button>
+
+            <button class="filter-button">
+                UPCOMING
+            </button>
+
+            <button class="filter-button">
+                RESULTS
+            </button>
+
+        </section>
+
+
+        <!-- Featured Matches -->
+        <section class="section matches-section">
+
+            <div class="section-header">
+                <h2>FEATURED MATCHES</h2>
+            </div>
+
+
+            <div class="featured-matches-grid">
+
+                <!-- Featured Match -->
+                <class="featured-match-card".>
+
+                    <div class="featured-match-top">
+
+                        <span class="match-status upcoming">
+                            🔵 UPCOMING
+                        </span>
+
+                        <span class="match-type-label">
+                            FRIENDLY
+                        </span>
+
+                    </div>
+
+
+                    <div class="featured-match-teams">
+
+                        <div class="featured-team">
+
+                            <img
+                                src="images/steelen-munchen.png"
+                                alt="Steelen München"
+                            >
+
+                            <h3>
+                                Steelen München
+                            </h3>
+
+                            <span>
+                                HOME
+                            </span>
+
+                        </div>
+
+
+                        <div class="featured-match-center">
+
+                            <strong>
+                                VS
+                            </strong>
+
+                            <p>
+                                Tomorrow · 8:00 PM
+                            </p>
+
+                        </div>
+
+
+                        <div class="featured-team">
+
+                            <img
+                                src="images/livergen.png"
+                                alt="Livergen"
+                            >
+
+                            <h3>
+                                Livergen
+                            </h3>
+
+                            <span>
+                                AWAY
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <a href="match.html?id=steelen-livergen" class="featured-match-button">
+    MATCH →
+</a>
+
+                </article>
+
+            </div>
+
+        </section>
+
+
+        <!-- Upcoming Matches -->
+       <section class="section matches-section" id="upcoming-matches">
+
+            <div class="section-header">
+                <h2>UPCOMING MATCHES</h2>
+            </div>
+
+
+            <div class="matches-list">
+
+                <!-- Match -->
+                <article class="match-card" id="alpha-gamma">
+
+                    <div class="match-card-date">
+                        <strong>FRI</strong>
+                        <span>22 AUG</span>
+                    </div>
+
+
+                    <div class="match-card-teams">
+
+                        <strong>
+                            Team Alpha
+                        </strong>
+
+                        <span>
+                            VS
+                        </span>
+
+                        <strong>
+                            Team Gamma
+                        </strong>
+
+                    </div>
+
+
+                    <div class="match-card-info">
+
+                        <span class="match-status upcoming">
+                            🔵 UPCOMING
+                        </span>
+
+                        <small>
+                            8:00 PM
+                        </small>
+
+                    </div>
+
+
+                    <match.html?id=alpha-gamma class="match-card-button">
+                        MATCH →
+                    </a>
+
+                </article>
+
+
+                <!-- Match -->
+                <article class="match-card" id="delta-beta">
+
+                    <div class="match-card-date">
+                        <strong>SAT</strong>
+                        <span>23 AUG</span>
+                    </div>
+
+
+                    <div class="match-card-teams">
+
+                        <strong>
+                            Team Delta
+                        </strong>
+
+                        <span>
+                            VS
+                        </span>
+
+                        <strong>
+                            Team Beta
+                        </strong>
+
+                    </div>
+
+
+                    <div class="match-card-info">
+
+                        <span class="match-status upcoming">
+                            🔵 UPCOMING
+                        </span>
+
+                        <small>
+                            7:30 PM
+                        </small>
+
+                    </div>
+
+
+                    <match.html?id=delta-beta class="match-card-button">
+                        MATCH →
+                    </a>
+
+                </article>
+
+
+                <!-- Match -->
+                <article class="match-card" id="gamma-beta">
+
+                    <div class="match-card-date">
+                        <strong>SUN</strong>
+                        <span>24 AUG</span>
+                    </div>
+
+
+                    <div class="match-card-teams">
+
+                        <strong>
+                            Team Gamma
+                        </strong>
+
+                        <span>
+                            VS
+                        </span>
+
+                        <strong>
+                            Team Beta
+                        </strong>
+
+                    </div>
+
+
+                    <div class="match-card-info">
+
+                        <span class="match-status upcoming">
+                            🔵 UPCOMING
+                        </span>
+
+                        <small>
+                            9:00 PM
+                        </small>
+
+                    </div>
+
+
+                    <match.html?id=gamma-beta class="match-card-button">
+                        MATCH →
+                    </a>
+
+                </article>
+
+            </div>
+
+        </section>
+
+
+        <!-- Recent Results -->
+        <section class="section matches-section" id="recent-results">
+
+            <div class="section-header">
+                <h2>RECENT RESULTS</h2>
+            </div>
+
+
+            <div class="results-grid">
+
+                <!-- Result -->
+                <article class="match-result-card" id="alpha-beta-result">
+
+                    <div class="result-card-top">
+
+                        <span class="match-status finished">
+                            ⚪ FT
+                        </span>
+
+                        <span class="match-type-label">
+                            FRIENDLY
+                        </span>
+
+                    </div>
+
+
+                    <div class="result-card-teams">
+
+                        <div class="result-card-team">
+
+                            <strong>
+                                Team Alpha
+                            </strong>
+
+                            <b>
+                                4
+                            </b>
+
+                        </div>
+
+
+                        <div class="result-card-team">
+
+                            <strong>
+                                Team Beta
+                            </strong>
+
+                            <b>
+                                2
+                            </b>
+
+                        </div>
+
+                    </div>
+
+
+                    <small>
+                        Yesterday
+                    </small>
+
+                </article>
+
+
+                <!-- Result -->
+                <article class="match-result-card" id="gamma-delta-result">
+
+                    <div class="result-card-top">
+
+                        <span class="match-status finished">
+                            ⚪ FT
+                        </span>
+
+                        <span class="match-type-label">
+                            FRIENDLY
+                        </span>
+
+                    </div>
+
+
+                    <div class="result-card-teams">
+
+                        <div class="result-card-team">
+
+                            <strong>
+                                Team Gamma
+                            </strong>
+
+                            <b>
+                                3
+                            </b>
+
+                        </div>
+
+
+                        <div class="result-card-team">
+
+                            <strong>
+                                Team Delta
+                            </strong>
+
+                            <b>
+                                1
+                            </b>
+
+                        </div>
+
+                    </div>
+
+
+                    <small>
+                        2 days ago
+                    </small>
+
+                </article>
+
+
+                <!-- Result -->
+                <article class="match-result-card" id="beta-delta-result">
+
+                    <div class="result-card-top">
+
+                        <span class="match-status finished">
+                            ⚪ FT
+                        </span>
+
+                        <span class="match-type-label">
+                            FRIENDLY
+                        </span>
+
+                    </div>
+
+
+                    <div class="result-card-teams">
+
+                        <div class="result-card-team">
+
+                            <strong>
+                                Team Beta
+                            </strong>
+
+                            <b>
+                                2
+                            </b>
+
+                        </div>
+
+
+                        <div class="result-card-team">
+
+                            <strong>
+                                Team Delta
+                            </strong>
+
+                            <b>
+                                2
+                            </b>
+
+                        </div>
+
+                    </div>
+
+
+                    <small>
+                        3 days ago
+                    </small>
+
+                </article>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- Footer -->
+    <footer>
+
+        <h2>NEL</h2>
+
+        <p>
+            ONE LEAGUE. ONE GOAL. BECOME THE BEST.
+        </p>
+
+        <div>
+            Home · Matches · Standings · Teams · Players · Market · Stats · News · About
+        </div>
+
+        <small>
+            © 2026 Neo Egoist League
+        </small>
+
+    </footer>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>

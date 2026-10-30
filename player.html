@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<link rel="icon" href="images/nel-logo.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Player Profile | Neo Egoist League</title>
+    
+    <meta name="description" content="Neo Egoist League: fixtures, standings, teams, players and transfers.">
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<!-- =========================
+     NAVIGATION
+========================= -->
+
+<nav class="navbar">
+
+    <a href="index.html" class="logo">
+    <img src="images/nel-logo.png" alt="NEL Logo">
+</a>
+
+    <div class="nav-links">
+
+        <a href="index.html">🏠 Home</a>
+        <a href="matches.html">⚽ Matches</a>
+        <a href="standings.html">🏆 Standings</a>
+        <a href="teams.html">👥 Teams</a>
+        <a href="players.html" class="active">👤 Players</a>
+        <a href="market.html">🛒 Market</a>
+        <a href="stats.html">📊 Stats</a>
+        <a href="news.html">📰 News</a>
+        <a href="about.html">ℹ️ About</a>
+
+    </div>
+
+    <a class="discord-button" href="https://discord.gg/FYT7ujxwv">
+        Discord
+    </a>
+
+    <button class="menu-toggle" aria-label="Open navigation menu">
+        ☰
+    </button>
+
+</nav>
+
+
+<!-- =========================
+     MAIN
+========================= -->
+
+<main class="player-page">
+
+
+    <!-- =========================
+         PLAYER HERO
+    ========================= -->
+
+    <section class="player-profile-header">
+
+        <div class="player-profile-image">
+
+            <div class="player-profile-placeholder">
+                10
+            </div>
+
+        </div>
+
+
+        <div class="player-profile-main">
+
+            <span class="eyebrow">
+                NEO EGOIST LEAGUE
+            </span>
+
+            <span class="player-profile-position">
+                CAM
+            </span>
+
+            <h1>
+                Player Lambda
+            </h1>
+
+            <p class="player-profile-team">
+                STEELEN MÜNCHEN
+            </p>
+
+            <p class="player-profile-description">
+                Placeholder player profile.
+            </p>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================
+         QUICK INFORMATION
+    ========================= -->
+
+    <section class="section player-quick-section">
+
+        <div class="section-header">
+            <h2>PLAYER OVERVIEW</h2>
+        </div>
+
+
+        <div class="player-quick-grid">
+
+            <div class="player-quick-card">
+
+                <span>STATUS</span>
+
+                <strong id="player-status">
+                    ACTIVE
+                </strong>
+
+            </div>
+
+
+            <div class="player-quick-card">
+
+                <span>SQUAD NUMBER</span>
+
+                <strong id="player-number">
+                    #10
+                </strong>
+
+            </div>
+
+
+            <div class="player-quick-card">
+
+                <span>POSITION</span>
+
+                <strong id="player-position">
+                    CAM
+                </strong>
+
+            </div>
+
+
+            <div class="player-quick-card">
+
+                <span>TEAM</span>
+
+                <strong id="player-team">
+                    STEELEN MÜNCHEN
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================
+         PLAYER STATS
+    ========================= -->
+
+    <section class="section player-stats-section">
+
+        <div class="section-header">
+
+            <h2>
+                PLAYER STATS
+            </h2>
+
+        </div>
+
+
+        <div class="player-profile-stats">
+
+
+            <div class="player-profile-stat">
+
+                <strong id="player-goals">
+                    13
+                </strong>
+
+                <span>
+                    GOALS
+                </span>
+
+            </div>
+
+
+            <div class="player-profile-stat">
+
+                <strong id="player-assists">
+                    12
+                </strong>
+
+                <span>
+                    ASSISTS
+                </span>
+
+            </div>
+
+
+            <div class="player-profile-stat">
+
+                <strong id="player-contributions">
+                    25
+                </strong>
+
+                <span>
+                    GOAL CONTRIBUTIONS
+                </span>
+
+            </div>
+
+
+            <div class="player-profile-stat">
+
+                <strong id="player-appearances">
+                    18
+                </strong>
+
+                <span>
+                    APPEARANCES
+                </span>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+
+   
+
+
+    
+    <!-- =========================
+     RECENT FORM
+========================= -->
+
+<section class="section player-form-section">
+    
+    <div class="section-header">
+        
+        <h2>
+            LAST MATCH
+        </h2>
+        
+    </div>
+    
+    
+    <div class="player-form-card">
+        
+        <div class="last-match-header">
+            
+            <div>
+                
+                <span class="last-match-label">
+                    MOST RECENT GAME
+                </span>
+                
+                <strong id="last-match">
+                    No match data available
+                </strong>
+                
+            </div>
+            
+            <span class="last-match-result" id="last-result">
+                —
+            </span>
+            
+        </div>
+        
+        
+        <div class="last-match-stats">
+            
+            <div>
+                <strong id="last-goals">
+                    0
+                </strong>
+                
+                <span>
+                    GOALS
+                </span>
+            </div>
+            
+            
+            <div>
+                <strong id="last-assists">
+                    0
+                </strong>
+                
+                <span>
+                    ASSISTS
+                </span>
+            </div>
+            
+            
+            <div>
+                <strong id="last-passes">
+                    0
+                </strong>
+                
+                <span>
+                    PASSES
+                </span>
+            </div>
+            
+            
+            <div>
+                <strong id="last-intercepts">
+                    0
+                </strong>
+                
+                <span>
+                    INTERCEPTS
+                </span>
+            </div>
+            
+            
+            <div>
+                <strong id="last-saves">
+                    0
+                </strong>
+                
+                <span>
+                    SAVES
+                </span>
+            </div>
+            
+        </div>
+        
+    </div>
+    
+</section>
+
+
+
+    <!-- =========================
+         PLAYER INFORMATION
+    ========================= -->
+
+    <section class="section player-info-section">
+
+        <div class="section-header">
+
+            <h2>
+                PLAYER INFORMATION
+            </h2>
+
+        </div>
+
+
+        <div class="player-info-grid">
+
+
+            <div class="player-info-card">
+
+                <span>
+                    PLAYER NUMBER
+                </span>
+
+                <strong id="info-number">
+                    #10
+                </strong>
+
+            </div>
+
+
+            <div class="player-info-card">
+
+                <span>
+                    POSITION
+                </span>
+
+                <strong id="info-position">
+                    CAM
+                </strong>
+
+            </div>
+
+
+            <div class="player-info-card">
+
+                <span>
+                    TEAM
+                </span>
+
+                <strong id="info-team">
+                    STEELEN MÜNCHEN
+                </strong>
+
+            </div>
+
+
+            <div class="player-info-card">
+
+                <span>
+                    STATUS
+                </span>
+
+                <strong id="info-status">
+                    ACTIVE
+                </strong>
+
+            </div>
+
+
+            <div class="player-info-card">
+
+                <span>
+                    MARKET VALUE
+                </span>
+
+                <strong id="info-value">
+                    €12.5M
+                </strong>
+
+            </div>
+
+
+            <div class="player-info-card">
+
+                <span>
+                    JOINED NEL
+                </span>
+
+                <strong id="info-joined">
+                    2026
+                </strong>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================
+         PLAYER BIO
+    ========================= -->
+
+    <section class="section player-bio-section">
+
+        <div class="section-header">
+
+            <h2>
+                PLAYER BIO
+            </h2>
+
+        </div>
+
+
+        <div class="player-bio-card">
+
+            <p id="player-bio">
+
+                Player Lambda is an attacking midfielder
+                competing for Steelen München in the
+                Neo Egoist League.
+
+            </p>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================
+         ACHIEVEMENTS
+    ========================= -->
+
+    <section class="section player-achievements-section">
+
+        <div class="section-header">
+
+            <h2>
+                ACHIEVEMENTS
+            </h2>
+
+        </div>
+
+
+        <div
+            class="player-achievements"
+            id="player-achievements"
+        >
+
+            <div class="player-achievement">
+
+                <strong>
+                    -
+                </strong>
+
+                <span>
+                    -
+                </span>
+
+            </div>
+
+
+            <div class="player-achievement">
+
+                <strong>
+                    -
+                </strong>
+
+                <span>
+                    -
+                </span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================
+         TRANSFER HISTORY
+    ========================= -->
+
+    <section class="section player-transfer-section">
+
+        <div class="section-header">
+
+            <h2>
+                TRANSFER HISTORY
+            </h2>
+
+        </div>
+
+
+        <div class="player-transfer-card">
+
+            <div class="transfer-row">
+
+                <span>
+                    CURRENT CLUB
+                </span>
+
+                <strong id="current-team">
+                    STEELEN MÜNCHEN
+                </strong>
+
+            </div>
+
+
+            <div class="transfer-row">
+
+                <span>
+                    PREVIOUS CLUB
+                </span>
+
+                <strong id="previous-team">
+                    —
+                </strong>
+
+            </div>
+
+
+            <div class="transfer-row">
+
+                <span>
+                    TRANSFER STATUS
+                </span>
+
+                <strong>
+                    REGISTERED
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================
+         DATABASE NOTICE
+    ========================= -->
+
+    <section class="player-placeholder-notice">
+
+        <h2>
+            PLAYER DATABASE
+        </h2>
+
+        <p>
+
+            Player profiles are currently using
+            placeholder data while the NEL player
+            registration system is being developed.
+
+        </p>
+
+    </section>
+
+
+
+    <!-- =========================
+         BACK
+    ========================= -->
+
+    <div class="player-profile-back">
+
+        <a
+            href="players.html"
+            class="player-card-button"
+        >
+            ← BACK TO PLAYERS
+        </a>
+
+    </div>
+
+
+</main>
+
+
+
+<!-- =========================
+     FOOTER
+========================= -->
+
+<footer>
+
+    <h2>NEL</h2>
+
+    <p>
+        ONE LEAGUE. ONE GOAL. BECOME THE BEST.
+    </p>
+
+    <div>
+        Home · Matches · Standings · Teams · Players · Market · Stats · News · About
+    </div>
+
+    <small>
+        © 2026 Neo Egoist League
+    </small>
+
+</footer>
+
+
+
+<script src="script.js"></script>
+
+</body>
+
+</html>

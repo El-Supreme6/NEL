@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<link rel="icon" href="images/nel-logo.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Match | Neo Egoist League</title>
+    
+    <meta name="description" content="Neo Egoist League: fixtures, standings, teams, players and transfers.">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+
+        <a href="index.html" class="logo">
+    <img src="images/nel-logo.png" alt="NEL Logo">
+</a>
+
+        <div class="nav-links">
+            <a href="index.html">🏠 Home</a>
+            <a href="matches.html">⚽ Matches</a>
+            <a href="standings.html">🏆 Standings</a>
+            <a href="teams.html">👥 Teams</a>
+            <a href="players.html">👤 Players</a>
+            <a href="market.html">🛒 Market</a>
+            <a href="stats.html">📊 Stats</a>
+            <a href="news.html">📰 News</a>
+            <a href="about.html">ℹ️ About</a>
+        </div>
+
+        <a class="discord-button" href="https://discord.gg/FYT7ujxwv">
+            Discord
+        </a>
+
+        <button class="menu-toggle" aria-label="Open navigation menu">
+            ☰
+        </button>
+
+    </nav>
+
+
+    <!-- Match Page -->
+    <main class="match-page">
+
+        <!-- Match Hero -->
+        <section class="match-hero">
+
+            <div class="match-hero-label" id="match-status">
+                LOADING
+            </div>
+
+            <div class="match-type-label" id="match-type">
+                MATCH
+            </div>
+
+
+            <div class="match-hero-teams">
+
+                <!-- Home Team -->
+                <div class="match-hero-team">
+
+                    <img
+                        id="home-team-logo"
+                        src=""
+                        alt=""
+                    >
+
+                    <h1 id="home-team-name">
+                        Loading...
+                    </h1>
+
+                    <span>
+                        HOME
+                    </span>
+
+                </div>
+
+
+                <!-- Center -->
+                <div class="match-hero-center">
+
+                    <strong id="match-score">
+                        VS
+                    </strong>
+
+                    <p id="match-date">
+                        Loading...
+                    </p>
+
+                </div>
+
+
+                <!-- Away Team -->
+                <div class="match-hero-team">
+
+                    <img
+                        id="away-team-logo"
+                        src=""
+                        alt=""
+                    >
+
+                    <h1 id="away-team-name">
+                        Loading...
+                    </h1>
+
+                    <span>
+                        AWAY
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Match Details -->
+        <section class="section match-details-section">
+
+            <div class="section-header">
+                <h2>MATCH DETAILS</h2>
+            </div>
+
+            <div class="match-details-grid">
+
+                <div class="match-detail-card">
+
+                    <span>DATE</span>
+
+                    <strong id="detail-date">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="match-detail-card">
+
+                    <span>TIME</span>
+
+                    <strong id="detail-time">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="match-detail-card">
+
+                    <span>COMPETITION</span>
+
+                    <strong id="detail-competition">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="match-detail-card">
+
+                    <span>VENUE</span>
+
+                    <strong id="detail-venue">
+                        —
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Match Information -->
+        <section class="section match-information-section">
+
+            <div class="section-header">
+                <h2>MATCH INFORMATION</h2>
+            </div>
+
+            <div class="match-information-card">
+
+                <p id="match-description">
+                    Loading match information...
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- Lineups -->
+        <section class="section match-lineups-section">
+
+            <div class="section-header">
+                <h2>LINEUPS</h2>
+            </div>
+
+            <div class="match-placeholder-card">
+
+                <span>LINEUPS</span>
+
+                <p id="lineups-message">
+                    Lineups will be announced before the match.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- Match Stats -->
+        <section class="section match-stats-section">
+
+            <div class="section-header">
+                <h2>MATCH STATS</h2>
+            </div>
+
+            <div class="match-stats-grid">
+
+                <div class="match-stat-card">
+
+                    <span>POSSESSION</span>
+
+                    <strong id="stat-possession">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="match-stat-card">
+
+                    <span>SHOTS</span>
+
+                    <strong id="stat-shots">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="match-stat-card">
+
+                    <span>SHOTS ON TARGET</span>
+
+                    <strong id="stat-target">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="match-stat-card">
+
+                    <span>CORNERS</span>
+
+                    <strong id="stat-corners">
+                        —
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Events -->
+        <section class="section match-events-section">
+
+            <div class="section-header">
+                <h2>MATCH EVENTS</h2>
+            </div>
+
+            <div class="match-events-card">
+
+                <p id="events-message">
+                    Match events will appear here once the match begins.
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- Footer -->
+    <footer>
+
+        <h2>NEL</h2>
+
+        <p>
+            ONE LEAGUE. ONE GOAL. BECOME THE BEST.
+        </p>
+
+        <div>
+            Home · Matches · Standings · Teams · Players · Market · Stats · News · About
+        </div>
+
+        <small>
+            © 2026 Neo Egoist League
+        </small>
+
+    </footer>
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>

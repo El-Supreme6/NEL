@@ -1,0 +1,279 @@
+<!DOCTYPE html><html lang="en"><head>
+<link rel="icon" href="images/nel-logo.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Negotiation | Neo Egoist League</title>
+    
+    <meta name="description" content="Neo Egoist League: fixtures, standings, teams, players and transfers.">
+
+<link rel="stylesheet" href="style.css">
+
+</head><body><!-- Navigation -->
+<nav class="navbar">
+
+    <a href="index.html" class="logo">
+        <img src="images/nel-logo.png" alt="NEL Logo">
+    </a>
+
+    <div class="nav-links">
+        <a href="index.html">🏠 Home</a>
+        <a href="matches.html">⚽ Matches</a>
+        <a href="standings.html">🏆 Standings</a>
+        <a href="teams.html">👥 Teams</a>
+        <a href="players.html">👤 Players</a>
+        <a href="market.html" class="active">🛒 Market</a>
+        <a href="stats.html">📊 Stats</a>
+        <a href="news.html">📰 News</a>
+        <a href="about.html">ℹ️ About</a>
+    </div>
+
+    <a class="discord-button" href="https://discord.gg/FYT7ujxwv">
+        Discord
+    </a>
+
+    <button class="menu-toggle" aria-label="Open navigation menu">
+        ☰
+    </button>
+
+</nav>
+
+
+<!-- Main -->
+<main class="negotiations-page">
+
+    <!-- Header -->
+       <section class="market-header">
+        <p class="eyebrow">NEO EGOIST LEAGUE</p>
+        <h1>PLAYER NEGOTIATION</h1>
+        <p class="market-description">Review the player and prepare your transfer offer.</p>
+        <div class="negotiation-disclaimer">⚠️ Negotiations are advised to be conducted on Discord.</div>
+    </section>
+
+
+    <!-- Player -->
+    <section class="section">
+
+        <div class="negotiation-player">
+
+            <div class="negotiation-player-image">
+                <div id="negotiation-player-number">
+                    —
+                </div>
+            </div>
+
+            <div class="negotiation-player-info">
+
+                <span id="negotiation-player-position">
+                    —
+                </span>
+
+                <h2 id="negotiation-player-name">
+                    Loading player...
+                </h2>
+
+                <p id="negotiation-player-team">
+                    —
+                </p>
+
+                <div
+                    id="negotiation-player-status"
+                    class="transfer-status"
+                >
+                    —
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Financial Information -->
+    <section class="section">
+
+        <div class="section-header">
+            <h2>TRANSFER INFORMATION</h2>
+        </div>
+
+        <div class="market-overview-grid">
+
+            <div class="market-overview-card">
+
+                <span>PLAYER VALUE</span>
+
+                <strong id="negotiation-value">
+                    —
+                </strong>
+
+            </div>
+
+            <div class="market-overview-card">
+
+                <span>ASKING PRICE</span>
+
+                <strong id="negotiation-asking-price">
+                    —
+                </strong>
+
+            </div>
+
+            <div class="market-overview-card">
+
+                <span>PLAYER WAGE</span>
+
+                <strong id="negotiation-wage">
+                    —
+                </strong>
+
+            </div>
+
+            <div class="market-overview-card">
+
+                <span>TRANSFER FEE</span>
+
+                <strong id="negotiation-transfer-fee">
+                    —
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Negotiation -->
+    <section class="section">
+
+        <div class="section-header">
+            <h2>MAKE AN OFFER</h2>
+        </div>
+
+        <div class="negotiation-box">
+
+            <p id="negotiation-message">
+                Enter your offer below.
+            </p>
+
+            <div class="negotiation-form">
+
+                <label for="offer-amount">
+                    TRANSFER OFFER
+                </label>
+
+                <div class="negotiation-input-row">
+
+                    <input
+                        type="number"
+                        id="offer-amount"
+                        min="0"
+                        step="0.1"
+                        placeholder="Enter amount in millions"
+                    >
+
+                    <span>M</span>
+
+                </div>
+
+                <button
+                    type="button"
+                    id="submit-offer"
+                    class="market-player-button"
+                >
+                    SUBMIT OFFER →
+                </button>
+
+            </div>
+
+            <div
+                id="negotiation-result"
+                class="negotiation-result"
+            ></div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Transfer Rules -->
+    <section class="section market-rules-section">
+
+        <div class="section-header">
+            <h2>NEGOTIATION RULES</h2>
+        </div>
+
+        <div class="market-rules">
+
+            <div>
+                <strong>TRANSFER FEE</strong>
+                <p>
+                    The agreed transfer fee is paid by the buying club.
+                </p>
+            </div>
+
+            <div>
+                <strong>CLUB SHARE</strong>
+                <p>
+                    50% of the agreed transfer fee goes to the player's
+                    original club.
+                </p>
+            </div>
+
+            <div>
+                <strong>PLAYER SHARE</strong>
+                <p>
+                    The remaining 50% goes to the player.
+                </p>
+            </div>
+
+            <div>
+                <strong>NEGOTIATION</strong>
+                <p>
+                    Clubs may offer more or less than the player's current
+                    value or asking price.
+                </p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Back -->
+    <section class="section">
+
+        <a href="market.html" class="market-player-button">
+            ← BACK TO MARKET
+        </a>
+
+    </section>
+
+</main>
+
+
+<!-- Footer -->
+<footer>
+
+    <h2>NEL</h2>
+
+    <p>
+        ONE LEAGUE. ONE GOAL. BECOME THE BEST.
+    </p>
+
+    <div>
+        Home · Matches · Standings · Teams · Players · Market · Stats · News · About
+    </div>
+
+    <small>
+        © 2026 Neo Egoist League
+    </small>
+
+</footer>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
