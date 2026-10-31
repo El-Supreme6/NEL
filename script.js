@@ -1137,218 +1137,112 @@ if (standingsBody) loadStandings();
 
 
 /* =========================
-   TEAM PROFILE PAGE
+   TEAMS PAGE (live)
 ========================= */
 
-const teamName =
-    document.getElementById("team-name");
+const teamsGrid = document.querySelector(".teams-grid");
 
-if (teamName) {
+async function loadTeams() {
+    const { data, error } = await db.from("teams")
+        .select("slug,name,logo_url,description").order("name");
 
-    const params =
-        new URLSearchParams(
-            window.location.search
-        );
+    if (error || !data) { console.error(error); return; }
 
-    const teamId =
-        params.get("id");
+    teamsGrid.innerHTML = data.map((t, i) => `
+        <article class="team-card">
+            <div class="team-card-top">
+                <span class="team-number">${String(i + 1).padStart(2, "0")}</span>
+                <span class="team-status">ACTIVE</span>
+            </div>
+            <div class="team-logo-container">
+                <img src="${esc(t.logo_url)}" alt="${esc(t.name)}">
+            </div>
+            <div class="team-card-content">
+                <span class="team-label">CLUB</span>
+                <h3>${esc(t.name)}</h3>
+                <p>${esc(t.description)}</p>
+            </div>
+            <a href="team.html?id=${encodeURIComponent(t.slug)}" class="team-card-button">VIEW TEAM →</a>
+        </article>`).join("");
+}
+
+if (teamsGrid) {
+    loadTeams();
+    teamsGrid.addEventListener("click", e => {
+        const card = e.target.closest(".team-card");
+        if (!card || e.target.closest("a")) return;
+        window.location.href = card.querySelector("a").href;
+    });
+}
 
 
-    const teams = {
+/* =========================
+   TEAM PROFILE PAGE (live)
+========================= */
 
-        "steelen-munchen": {
-            name: "Steelen München",
-            logo: "images/steelen-munchen.png",
-            description: "The home of relentless ego and ambition.",
-            value: "€0",
-            position: "-",
-            points: "0",
-            form: "-"
-        },
+const teamNameEl = document.getElementById("team-name");
 
-        "rpb": {
-            name: "RPB",
-            logo: "images/rpb.png",
-            description: "A club ready to prove itself in the Neo Egoist League.",
-            value: "€0",
-            position: "-",
-            points: "0",
-            form: "-"
-        },
-
-        "livergen": {
-            name: "Livergen",
-            logo: "images/livergen.png",
-            description: "A club competing for supremacy in the NEL.",
-            value: "€0",
-            position: "-",
-            points: "0",
-            form: "-"
-        },
-
-        "bastard-munchen": {
-            name: "Bastard München",
-            logo: "images/bastard-munchen.png",
-            description: "A club built around competition and ambition.",
-            value: "€0",
-            position: "-",
-            points: "0",
-            form: "-"
-        },
-
-        "pxg": {
-            name: "Paris X Gen",
-            logo: "images/pxg.png",
-            description: "NEL's most ambitious club.",
-            value: "€0",
-            position: "-",
-            points: "0",
-            form: "-"
-        },
-
-        "arsenaly": {
-            name: "Arsenaly",
-            logo: "images/arsenaly.png",
-            description: "A club looking to establish its place among the elite.",
-            value: "€0",
-            position: "-",
-            points: "0",
-            form: "-"
-        },
-
-        "fc-barcha": {
-            name: "FC Barcha",
-            logo: "images/fc-barcha.png",
-            description: "A club bringing creativity and attacking football to the NEL.",
-            value: "€0",
-            position: "-",
-            points: "0",
-            form: "-"
-        },
-
-        "tvb-fc": {
-            name: "Tonderia Vitoria Bola FC",
-            logo: "images/tvb-fc.png",
-            description: "A club ready to compete on the biggest stage.",
-            value: "€0",
-            position: "-",
-            points: "0",
-            form: "-"
-        },
-
-        "fc-royale": {
-            name: "FC ROYALE",
-            logo: "images/fc-royale.png",
-            description: "A club chasing nothing less than the top.",
-            value: "€0",
-            position: "-",
-            points: "0",
-            form: "-"
-        },
-
-        "newshine-united": {
-            name: "Newshine United",
-            logo: "images/newshine-united.png",
-            description: "A rising club with everything to prove.",
-            value: "€0",
-            position: "-",
-            points: "0",
-            form: "-"
-        }
-
+async function loadTeam() {
+    const slug = new URLSearchParams(window.location.search).get("id");
+    const setText = (id, v) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = v;
     };
 
-
-    const team =
-        teams[teamId];
-
-
-    /* =========================
-       TEAM NOT FOUND
-    ========================= */
+    const { data: team } = await db.from("teams").select("*").eq("slug", slug || "").maybeSingle();
 
     if (!team) {
-
-        document.title =
-            "Team Not Found | Neo Egoist League";
-
-        teamName.textContent =
-            "Team Not Found";
-
-        const description =
-            document.getElementById("team-description");
-
-        if (description) {
-            description.textContent =
-                "The team you are looking for does not exist.";
-        }
-
-    } else {
-
-        /* =========================
-           UPDATE PAGE
-        ========================= */
-
-        document.title =
-            `${team.name} | Neo Egoist League`;
-
-        teamName.textContent =
-            team.name;
-
-
-        document.getElementById("team-description").textContent =
-            team.description;
-
-
-        document.getElementById("team-value").textContent =
-            team.value;
-
-
-        document.getElementById("team-position").textContent =
-            team.position;
-
-
-        document.getElementById("team-points").textContent =
-            team.points;
-
-
-        document.getElementById("team-form").textContent =
-            team.form;
-
-
-        /* =========================
-           TEAM LOGO
-        ========================= */
-
-        const logo =
-            document.getElementById("team-logo");
-
-
-        if (logo) {
-
-            if (team.logo) {
-
-                logo.src =
-                    team.logo;
-
-                logo.alt =
-                    `${team.name} logo`;
-
-                logo.style.display =
-                    "block";
-
-            } else {
-
-                logo.style.display =
-                    "none";
-
-            }
-
-        }
-
+        document.title = "Team Not Found | Neo Egoist League";
+        setText("team-name", "Team Not Found");
+        setText("team-description", "The team you are looking for does not exist.");
+        return;
     }
 
+    document.title = `${team.name} | Neo Egoist League`;
+    setText("team-name", team.name);
+    setText("team-description", team.description || "");
+
+    const logo = document.getElementById("team-logo");
+    if (logo) {
+        if (team.logo_url) {
+            logo.src = team.logo_url;
+            logo.alt = `${team.name} logo`;
+            logo.style.display = "block";
+        } else {
+            logo.style.display = "none";
+        }
+    }
+
+    const [standingsRes, playersRes, matchesRes] = await Promise.all([
+        db.from("standings").select("*"),
+        db.from("player_totals").select("value").eq("team_id", team.id),
+        db.from("matches").select("home_team,away_team,home_score,away_score")
+            .eq("status", "finished")
+            .or(`home_team.eq.${team.id},away_team.eq.${team.id}`)
+            .order("kickoff", { ascending: false }).limit(5)
+    ]);
+
+    const table = (standingsRes.data || [])
+        .map(t => ({ ...t, points: Number(t.points), gd: Number(t.gd), gf: Number(t.gf) }))
+        .sort((a, b) => b.points - a.points || b.gd - a.gd || b.gf - a.gf || a.name.localeCompare(b.name));
+    const idx = table.findIndex(t => t.team_id === team.id);
+
+    setText("team-position", idx >= 0 ? `#${idx + 1}` : "—");
+    setText("team-points", idx >= 0 ? table[idx].points : "0");
+
+    const value = (playersRes.data || []).reduce((sum, p) => sum + Number(p.value), 0);
+    setText("team-value", `${value.toFixed(1)}M`);
+
+    const form = (matchesRes.data || []).map(m => {
+        const mine = m.home_team === team.id ? m.home_score : m.away_score;
+        const theirs = m.home_team === team.id ? m.away_score : m.home_score;
+        return mine > theirs ? "W" : mine < theirs ? "L" : "D";
+    }).join(" ");
+    setText("team-form", form || "—");
 }
+
+if (teamNameEl) loadTeam();
+
 
 /* =========================
    MATCHES PAGE
@@ -1388,51 +1282,6 @@ if (document.querySelector(".matches-page")) {
     
 }
 
-
-/* =========================
-   TEAMS PAGE
-========================= */
-
-if (document.querySelector(".teams-page")) {
-    
-    const teamCards =
-        document.querySelectorAll(".team-card");
-    
-    teamCards.forEach(card => {
-        
-        const button =
-            card.querySelector(
-                ".team-card-button"
-            );
-        
-        if (!button) {
-            return;
-        }
-        
-        const teamLink =
-            button.getAttribute("href");
-        
-        if (!teamLink) {
-            return;
-        }
-        
-        card.style.cursor = "pointer";
-        
-        card.addEventListener("click", event => {
-            
-            /* Keep VIEW TEAM button working */
-            if (event.target.closest("a, button")) {
-                return;
-            }
-            
-            window.location.href =
-                teamLink;
-            
-        });
-        
-    });
-    
-}
 /* =========================
    PLAYER CARD NAVIGATION
 ========================= */
