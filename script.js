@@ -251,8 +251,6 @@ if (countdownElement) {
     if (matchTime > Date.now()) timer = setInterval(updateCountdown, 1000);
 }
 
-    setInterval(updateCountdown, 1000);
-
 
 /* =========================
    MATCH PAGE
@@ -1136,108 +1134,6 @@ async function loadStandings() {
 }
 
 if (standingsBody) loadStandings();
-
-
-    /* =========================
-       SORT TABLE
-    ========================= */
-
-    standingsData.sort((a, b) => {
-
-        if (b.points !== a.points) {
-            return b.points - a.points;
-        }
-
-        if (b.gd !== a.gd) {
-            return b.gd - a.gd;
-        }
-
-        if (b.gf !== a.gf) {
-            return b.gf - a.gf;
-        }
-
-        return a.name.localeCompare(b.name);
-
-    });
-
-
-    /* =========================
-       BUILD TABLE
-    ========================= */
-
-    standingsBody.innerHTML = "";
-
-    standingsData.forEach((team, index) => {
-
-        const row =
-            document.createElement("tr");
-
-
-        if (index < 3) {
-            row.classList.add("top-position");
-        }
-
-
-        const position =
-            index + 1;
-
-
-        const gd =
-            team.gd > 0
-                ? `+${team.gd}`
-                : team.gd;
-
-
-        const logoHTML =
-            team.logo
-                ? `
-                    <img
-                        src="${team.logo}"
-                        alt="${team.name}"
-                    >
-                  `
-                : `
-                    <div class="team-placeholder">
-                        ${team.name.charAt(0)}
-                    </div>
-                  `;
-
-
-        row.innerHTML = `
-
-            <td class="position">
-                ${position}
-            </td>
-
-                        <td>
-                <div class="team-cell">
-                    ${logoHTML}
-                    <strong>${team.name}</strong>
-                </div>
-            </td>
-
-            <td>${team.played}</td>
-
-            <td>${team.wins}</td>
-
-            <td>${team.draws}</td>
-
-            <td>${team.losses}</td>
-
-            <td>${gd}</td>
-
-            <td class="points">
-                ${team.points}
-            </td>
-
-        `;
-
-
-        standingsBody.appendChild(row);
-
-    });
-
-}
 
 
 /* =========================
