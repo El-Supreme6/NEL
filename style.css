@@ -436,3 +436,8 @@ footer small{display:block;margin-top:24px;padding-top:18px;border-top:1px solid
 .article-image{height:220px}
 footer{padding:44px 6%}
 }
+.master-card{display:flex;align-items:center;gap:18px;padding:20px 22px;margin-bottom:20px;background:var(--panel);border:1px solid var(--cyan-dim);border-left:2px solid var(--cyan)}
+.master-card img,.master-avatar{width:56px;height:56px;flex-shrink:0;object-fit:cover;border:1px solid var(--cyan-dim)}
+.master-avatar{display:grid;place-items:center;color:var(--cyan);font:800 24px/1 var(--display)}
+.master-card h3{margin-top:8px;font-size:34px;letter-spacing:.06em}
+.master-tag{display:inline-block;padding:4px 10px;border:1px solid var(--cyan-dim);color:var(--cyan);font:700 11px/1 var(--body);letter-spacing:.24em}
