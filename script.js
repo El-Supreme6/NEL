@@ -2557,3 +2557,186 @@ if (statsInput) {
         label.textContent = "NOT CONNECTED YET";
     });
 }
+/* =========================
+   LIVE MATCHES (home, matches, match pages)
+========================= */
+
+const MATCH_SELECT = "*, home:teams!home_team(name,slug,logo_url), away:teams!away_team(name,slug,logo_url)";
+const dateOf = k => (k ? new Date(k) : null);
+const fmtDay = d => d.toLocaleDateString("en-GB", { weekday: "short" }).toUpperCase();
+const fmtDM = d => d.toLocaleDateString("en-GB", { day: "numeric", month: "short" }).toUpperCase();
+const fmtTime = d => d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+const fmtFull = k => (k ? `${fmtDM(dateOf(k))} · ${fmtTime(dateOf(k))}` : "Date TBA");
+const crest = (t, cls) => (t && t.logo_url ? `<img class="${cls}" src="${esc(t.logo_url)}" alt="${esc(t.name)}">` : "");
+const matchHref = m => `match.html?id=${encodeURIComponent(m.slug)}`;
+const emptyNote = text => `<p style="color:var(--muted)">${text}</p>`;
+const chip = m => m.status === "finished" ? "⚪ FT" : m.status === "live" ? "🔴 LIVE" : "🔵 UPCOMING";
+
+// any card with data-href is clickable (links and buttons still work normally)
+document.addEventListener("click", e => {
+    const card = e.target.closest("[data-href]");
+    if (card && !e.target.closest("a, button")) window.location.href = card.dataset.href;
+});
+
+function startCountdown(el, kickoff) {
+    const t = Date.parse(kickoff);
+    if (!el) return;
+    if (Number.isNaN(t)) { el.textContent = "DATE TBA"; return; }
+    let timer;
+    const tick = () => {
+        const diff = t - Date.now();
+        if (diff <= 0) { el.textContent = "MATCH STARTED"; clearInterval(timer); return; }
+        const d = Math.floor(diff / 86400000), h = Math.floor(diff / 3600000) % 24;
+        const m = Math.floor(diff / 60000) % 60, s = Math.floor(diff / 1000) % 60;
+        el.textContent = d > 0 ? `${d}d ${h}h ${m}m ${s}s` : `${h}h ${m}m ${s}s`;
+    };
+    tick();
+    timer = setInterval(tick, 1000);
+}
+
+async function getMatches() {
+    const { data, error } = await db.from("matches").select(MATCH_SELECT).limit(300);
+    if (error) { console.error(error); return null; }
+    const tm = m => (m.kickoff ? Date.parse(m.kickoff) : 0);
+    return {
+        upcoming: data.filter(m => m.status !== "finished").sort((a, b) => (tm(a) || Infinity) - (tm(b) || Infinity)),
+        results: data.filter(m => m.status === "finished").sort((a, b) => tm(b) - tm(a))
+    };
+}
+
+const listCard = (m, home) => {
+    const d = dateOf(m.kickoff);
+    const b = home ? "upcoming" : "match-card";
+    return `<article class="${home ? "upcoming-card" : "match-card"}" ${home ? "" : `id="${esc(m.slug)}"`} data-href="${matchHref(m)}">
+        <div class="${b}-date"><strong>${d ? fmtDay(d) : "TBA"}</strong><span>${d ? fmtDM(d) : ""}</span></div>
+        <div class="${b}-teams"><strong>${esc(m.home.name)}</strong><span>VS</span><strong>${esc(m.away.name)}</strong></div>
+        <div class="${b}-info"><span class="match-status upcoming">${chip(m)}</span><small>${d ? fmtTime(d) : ""}</small></div>
+        <a href="${matchHref(m)}" class="${b}-button">MATCH →</a></article>`;
+};
+
+const homeResult = m => `<div class="result-card" data-href="${matchHref(m)}">
+    <span class="match-status finished">⚪ FT</span><span class="match-type-label">${esc(m.type)}</span>
+    <div class="result-team"><strong>${esc(m.home.name)}</strong><b>${m.home_score}</b></div>
+    <div class="result-team"><strong>${esc(m.away.name)}</strong><b>${m.away_score}</b></div>
+    <small>${fmtFull(m.kickoff)}</small>
+    <a href="${matchHref(m)}" class="match-card-button">MATCH →</a></div>`;
+
+const resultCard = m => `<article class="match-result-card" id="${esc(m.slug)}" data-href="${matchHref(m)}">
+    <div class="result-card-top"><span class="match-status finished">⚪ FT</span><span class="match-type-label">${esc(m.type)}</span></div>
+    <div class="result-card-teams">
+        <div class="result-card-team"><strong>${esc(m.home.name)}</strong><b>${m.home_score}</b></div>
+        <div class="result-card-team"><strong>${esc(m.away.name)}</strong><b>${m.away_score}</b></div>
+    </div>
+    <small>${fmtFull(m.kickoff)}</small></article>`;
+
+const featuredCard = m => {
+    const done = m.status === "finished";
+    return `<article class="featured-match-card" id="${esc(m.slug)}" data-href="${matchHref(m)}">
+        <div class="featured-match-top"><span class="match-status ${done ? "finished" : "upcoming"}">${chip(m)}</span><span class="match-type-label">${esc(m.type)}</span></div>
+        <div class="featured-match-teams">
+            <div class="featured-team">${crest(m.home, "")}<h3>${esc(m.home.name)}</h3><span>HOME</span></div>
+            <div class="featured-match-center"><strong>${done ? `${m.home_score} - ${m.away_score}` : "VS"}</strong><p>${fmtFull(m.kickoff)}</p></div>
+            <div class="featured-team">${crest(m.away, "")}<h3>${esc(m.away.name)}</h3><span>AWAY</span></div>
+        </div>
+        <a href="${matchHref(m)}" class="featured-match-button">MATCH →</a></article>`;
+};
+
+async function loadMatchLists() {
+    const all = await getMatches();
+    if (!all) return;
+    const { upcoming, results } = all;
+    const featured = upcoming.find(m => m.featured) || upcoming[0] || results[0];
+
+    const homeFeatured = document.querySelector(".featured-match");
+    if (homeFeatured) {
+        if (featured) {
+            const done = featured.status === "finished";
+            homeFeatured.dataset.href = matchHref(featured);
+            homeFeatured.innerHTML = `
+                <div class="match-team">${crest(featured.home, "match-team-logo")}<h3>${esc(featured.home.name)}</h3><p>HOME</p></div>
+                <div class="match-center">
+                    <span class="match-type">${esc(featured.type)}</span>
+                    <div class="vs">${done ? `${featured.home_score} - ${featured.away_score}` : "VS"}</div>
+                    <div class="match-date" id="featured-countdown">${done ? "FULL TIME" : ""}</div>
+                    <a href="${matchHref(featured)}" class="match-button">MATCH CENTER →</a>
+                </div>
+                <div class="match-team">${crest(featured.away, "match-team-logo")}<h3>${esc(featured.away.name)}</h3><p>AWAY</p></div>`;
+            if (!done) startCountdown(document.getElementById("featured-countdown"), featured.kickoff);
+        } else {
+            homeFeatured.innerHTML = emptyNote("No matches scheduled yet.");
+        }
+        const r = document.querySelector(".results");
+        const u = document.querySelector(".upcoming-list");
+        if (r) r.innerHTML = results.slice(0, 3).map(homeResult).join("") || emptyNote("No results yet.");
+        if (u) u.innerHTML = upcoming.slice(0, 3).map(m => listCard(m, true)).join("") || emptyNote("No upcoming matches.");
+    }
+
+    const fg = document.querySelector(".featured-matches-grid");
+    if (fg) {
+        fg.innerHTML = featured ? featuredCard(featured) : emptyNote("No featured match.");
+        document.querySelector(".matches-list").innerHTML = upcoming.map(m => listCard(m, false)).join("") || emptyNote("No upcoming matches.");
+        document.querySelector(".results-grid").innerHTML = results.map(resultCard).join("") || emptyNote("No results yet.");
+        if (location.hash) {
+            const t = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+            if (t) t.scrollIntoView();
+        }
+    }
+}
+
+if (document.querySelector(".featured-match") || document.querySelector(".featured-matches-grid")) loadMatchLists();
+
+/* ---------- single match page ---------- */
+async function loadMatchPage() {
+    const slug = new URLSearchParams(location.search).get("id");
+    const set = (sel, v) => { const el = document.querySelector(sel); if (el) el.textContent = v; };
+    const { data: m } = await db.from("matches").select(MATCH_SELECT).eq("slug", slug || "").maybeSingle();
+
+    if (!m) {
+        document.title = "Match Not Found | Neo Egoist League";
+        set("#match-status", "MATCH NOT FOUND"); set("#match-type", "NEL");
+        set("#home-team-name", "Unknown match"); set("#away-team-name", "");
+        set("#match-score", "—"); set("#match-date", "");
+        set("#match-description", "The match you are looking for does not exist or the link is invalid.");
+        return;
+    }
+
+    const d = dateOf(m.kickoff), done = m.status === "finished";
+    document.title = `${m.home.name} vs ${m.away.name} | NEL`;
+    set("#match-status", m.status.toUpperCase()); set("#match-type", m.type);
+    set("#home-team-name", m.home.name); set("#away-team-name", m.away.name);
+    set("#match-score", done ? `${m.home_score} - ${m.away_score}` : "VS");
+    set("#match-date", d ? `${fmtDM(d)} · ${fmtTime(d)}` : "Date TBA");
+    set("#detail-date", d ? fmtDM(d) : "TBA"); set("#detail-time", d ? fmtTime(d) : "TBA");
+    set("#detail-competition", m.type); set("#detail-venue", m.venue || "TBD");
+    set("#match-description", m.description ||
+        (done ? `${m.home.name} ${m.home_score}-${m.away_score} ${m.away.name}.` : `${m.home.name} face ${m.away.name}.`));
+
+    [["#home-team-logo", m.home], ["#away-team-logo", m.away]].forEach(([sel, t]) => {
+        const img = document.querySelector(sel);
+        if (t.logo_url) { img.src = t.logo_url; img.alt = t.name; img.style.display = "block"; }
+        else img.style.display = "none";
+    });
+
+    const { data: rows } = await db.from("match_stats").select("*, player:players(name)").eq("match_id", m.id);
+    const stats = (rows || []).sort((a, b) => b.goals - a.goals || b.assists - a.assists);
+    const sum = k => stats.reduce((s, r) => s + r[k], 0);
+
+    document.querySelector(".match-stats-grid").innerHTML =
+        [["GOALS", "goals"], ["ASSISTS", "assists"], ["INTERCEPTS", "intercepts"], ["PASSES", "passes"], ["SAVES", "saves"]]
+            .map(([l, k]) => `<div class="match-stat-card"><span>${l}</span><strong>${sum(k)}</strong></div>`).join("");
+
+    const sec = document.querySelector(".match-lineups-section");
+    sec.querySelector("h2").textContent = "PLAYER STATS";
+    const card = sec.querySelector(".match-placeholder-card");
+    card.style.padding = stats.length ? "0" : "";
+    card.innerHTML = stats.length
+        ? `<div class="stats-table-wrapper"><table class="stats-table"><thead><tr><th>PLAYER</th><th>G</th><th>A</th><th>INT</th><th>PASS</th><th>SAVES</th><th>AWARD</th></tr></thead><tbody>${
+            stats.map(r => `<tr><td>${esc(r.player ? r.player.name : "?")}</td><td>${r.goals}</td><td>${r.assists}</td><td>${r.intercepts}</td><td>${r.passes}</td><td>${r.saves}</td><td>${[r.mvp ? "MVP" : "", r.motm ? "MOTM" : ""].filter(Boolean).join(" ") || "—"}</td></tr>`).join("")
+          }</tbody></table></div>`
+        : "<p>No player stats yet.</p>";
+
+    const ev = document.querySelector(".match-events-section");
+    if (ev) ev.style.display = "none";
+}
+
+if (document.querySelector(".match-page")) loadMatchPage();
