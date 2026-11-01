@@ -2744,7 +2744,7 @@ if (document.querySelector(".match-page")) loadMatchPage();
    LIVE PLAYERS (players page + profile)
 ========================= */
 
-const fmtM = v => `${Number(v).toFixed(1)}M`;
+const fmtM = v => `${Number(v).toFixed(2)}M`;
 const playersGrid = document.querySelector(".players-grid");
 
 async function loadPlayers() {
