@@ -1330,7 +1330,7 @@ if (document.querySelector(".players-page")) {
    PLAYER PROFILE PAGE
 ========================= */
 
-const playerPage = document.querySelector(".player-page");
+const playerPage = null;
 
 if (playerPage) {
     
@@ -2740,3 +2740,113 @@ async function loadMatchPage() {
 }
 
 if (document.querySelector(".match-page")) loadMatchPage();
+/* =========================
+   LIVE PLAYERS (players page + profile)
+========================= */
+
+const fmtM = v => `${Number(v).toFixed(1)}M`;
+const playersGrid = document.querySelector(".players-grid");
+
+async function loadPlayers() {
+    const [pt, tm] = await Promise.all([
+        db.from("player_totals").select("*").order("name"),
+        db.from("teams").select("id,name")
+    ]);
+    if (pt.error) { console.error(pt.error); return; }
+    const teamById = Object.fromEntries((tm.data || []).map(t => [t.id, t.name]));
+
+    playersGrid.innerHTML = pt.data.length ? pt.data.map(p => {
+        const gk = (p.position || "").toUpperCase() === "GK";
+        const stats = gk ? [[p.saves, "SAVES"], [p.appearances, "APPEARANCES"]]
+                         : [[p.goals, "GOALS"], [p.assists, "ASSISTS"]];
+        const href = `player.html?id=${encodeURIComponent(p.slug)}`;
+        const has = p.number != null;
+        return `<article class="player-card" data-href="${href}">
+            <div class="player-card-top"><span class="player-number">${has ? "#" + esc(p.number) : ""}</span><span class="player-position">${esc(p.position || "—")}</span></div>
+            <div class="player-image"><div class="player-placeholder">${has ? esc(String(p.number).padStart(2, "0")) : "?"}</div></div>
+            <div class="player-card-content"><span class="player-team">${esc((p.team_id ? teamById[p.team_id] || "" : "Free agent").toUpperCase())}</span><h3>${esc(p.name)}</h3></div>
+            <div class="player-stats">${stats.map(([v, l]) => `<div><strong>${v}</strong><span>${l}</span></div>`).join("")}</div>
+            <a href="${href}" class="player-card-button">VIEW PROFILE →</a></article>`;
+    }).join("") : emptyNote("No players yet.");
+}
+
+if (playersGrid) loadPlayers();
+
+async function loadPlayerProfile() {
+    const slug = new URLSearchParams(location.search).get("id");
+    const put = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+    const q = sel => document.querySelector(sel);
+
+    const { data: p } = await db.from("players").select("*, team:teams(name)").eq("slug", slug || "").maybeSingle();
+
+    if (!p) {
+        document.title = "Player Not Found | Neo Egoist League";
+        q(".player-profile-main h1").textContent = "Player Not Found";
+        q(".player-profile-description").textContent = "The player you are looking for does not exist.";
+        document.querySelectorAll(".player-page section.section").forEach(s => s.style.display = "none");
+        return;
+    }
+
+    const [tot, ms, tr] = await Promise.all([
+        db.from("player_totals").select("*").eq("player_id", p.id).maybeSingle(),
+        db.from("match_stats").select("*, match:matches(kickoff,status,home_score,away_score,home_team,away_team,home:teams!home_team(name),away:teams!away_team(name))").eq("player_id", p.id),
+        db.from("transfers").select("*, from:teams!from_team(name)").eq("player_id", p.id).order("created_at", { ascending: false })
+    ]);
+
+    const t = tot.data || { goals: 0, assists: 0, contributions: 0, appearances: 0, mvps: 0, motms: 0, value: p.base_value };
+    const teamTxt = (p.team ? p.team.name : "Free agent").toUpperCase();
+    const num = p.number != null ? `#${p.number}` : "—";
+    const pos = p.position || "—";
+    const status = p.active ? "ACTIVE" : "INACTIVE";
+
+    document.title = `${p.name} | Neo Egoist League`;
+    q(".player-profile-placeholder").textContent = p.number != null ? String(p.number) : "?";
+    q(".player-profile-position").textContent = pos;
+    q(".player-profile-main h1").textContent = p.name;
+    q(".player-profile-team").textContent = teamTxt;
+    q(".player-profile-description").textContent =
+        `${p.name} is ${p.active ? "an active" : "an inactive"} ${p.position || "player"} ${p.team ? "competing for " + p.team.name : "currently without a club"} in the Neo Egoist League.`;
+
+    put("player-status", status); put("player-number", num); put("player-position", pos); put("player-team", teamTxt);
+    put("player-goals", t.goals); put("player-assists", t.assists);
+    put("player-contributions", t.contributions); put("player-appearances", t.appearances);
+    put("info-number", num); put("info-position", pos); put("info-team", teamTxt); put("info-status", status);
+    put("info-value", fmtM(t.value)); put("info-joined", p.joined_year || "—");
+    put("current-team", teamTxt);
+    put("player-bio", p.bio || `${p.name} is competing in the Neo Egoist League.`);
+
+    const prev = tr.data && tr.data[0];
+    put("previous-team", prev ? (prev.from ? prev.from.name.toUpperCase() : "FREE AGENT") : (p.previous_team || "—"));
+
+    const when = r => (r.match.kickoff ? Date.parse(r.match.kickoff) : 0);
+    const last = (ms.data || []).filter(r => r.match).sort((a, b) => when(b) - when(a))[0];
+    if (last) {
+        const m = last.match;
+        const side = p.team_id && p.team_id === m.home_team ? "home" : p.team_id && p.team_id === m.away_team ? "away" : null;
+        put("last-match", `${m.home.name} ${m.home_score ?? "-"} - ${m.away_score ?? "-"} ${m.away.name}`);
+        let res = "—";
+        if (m.status === "finished") {
+            res = "FT";
+            if (side) {
+                const a = side === "home" ? m.home_score : m.away_score;
+                const b = side === "home" ? m.away_score : m.home_score;
+                res = a > b ? "WIN" : a < b ? "LOSS" : "DRAW";
+            }
+        }
+        put("last-result", res);
+        put("last-goals", last.goals); put("last-assists", last.assists);
+        put("last-passes", last.passes); put("last-intercepts", last.intercepts); put("last-saves", last.saves);
+    }
+
+    const ach = [];
+    if (t.mvps) ach.push(["MVP", `${t.mvps} award${t.mvps > 1 ? "s" : ""}`]);
+    if (t.motms) ach.push(["MAN OF THE MATCH", `${t.motms} award${t.motms > 1 ? "s" : ""}`]);
+    document.getElementById("player-achievements").innerHTML = ach.length
+        ? ach.map(([a, b]) => `<div class="player-achievement"><strong>${a}</strong><span>${b}</span></div>`).join("")
+        : `<div class="player-achievement"><strong>—</strong><span>No awards yet</span></div>`;
+
+    const notice = q(".player-placeholder-notice");
+    if (notice) notice.style.display = "none";
+}
+
+if (document.querySelector(".player-page")) loadPlayerProfile();
