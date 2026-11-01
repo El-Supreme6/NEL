@@ -2850,3 +2850,54 @@ async function loadPlayerProfile() {
 }
 
 if (document.querySelector(".player-page")) loadPlayerProfile();
+
+
+/* =========================
+   TEAM SQUAD + MASTER (team profile page)
+========================= */
+
+async function loadSquad() {
+    const slug = new URLSearchParams(location.search).get("id");
+    const holder = document.querySelector(".team-squad-placeholder");
+    if (!holder) return;
+
+    const { data: team } = await db.from("teams").select("id").eq("slug", slug || "").maybeSingle();
+    if (!team) { holder.remove(); return; }
+
+    const [pl, pt, ms] = await Promise.all([
+        db.from("players").select("id,slug,name,number,position").eq("team_id", team.id).eq("active", true),
+        db.from("player_totals").select("player_id,goals,assists,saves,appearances,value").eq("team_id", team.id),
+        db.from("team_masters").select("name,avatar_url").eq("team_id", team.id)
+    ]);
+    const tot = Object.fromEntries((pt.data || []).map(r => [r.player_id, r]));
+
+    const masters = (ms.data || []).length
+        ? ms.data.map(m => `<div class="master-card">
+            ${m.avatar_url ? `<img src="${esc(m.avatar_url)}" alt="">` : `<div class="master-avatar">${esc(m.name.charAt(0).toUpperCase())}</div>`}
+            <div><span class="master-tag">MASTER</span><h3>${esc(m.name)}</h3></div></div>`).join("")
+        : `<div class="master-card"><div><span class="master-tag">MASTER</span><h3>Not assigned yet</h3></div></div>`;
+
+    const players = (pl.data || []).map(p => ({ ...p, t: tot[p.id] || {} }))
+        .sort((a, b) => (Number(b.t.value) || 0) - (Number(a.t.value) || 0));
+
+    const cards = players.map(p => {
+        const gk = (p.position || "").toUpperCase() === "GK";
+        const t = p.t;
+        const stats = gk ? [[t.saves || 0, "SAVES"], [t.appearances || 0, "APPEARANCES"]]
+                         : [[t.goals || 0, "GOALS"], [t.assists || 0, "ASSISTS"]];
+        const href = `player.html?id=${encodeURIComponent(p.slug)}`;
+        const has = p.number != null;
+        return `<article class="player-card" data-href="${href}">
+            <div class="player-card-top"><span class="player-number">${has ? "#" + esc(p.number) : ""}</span><span class="player-position">${esc(p.position || "—")}</span></div>
+            <div class="player-image"><div class="player-placeholder">${has ? esc(String(p.number).padStart(2, "0")) : "?"}</div></div>
+            <div class="player-card-content"><h3>${esc(p.name)}</h3></div>
+            <div class="player-stats">${stats.map(([v, l]) => `<div><strong>${v}</strong><span>${l}</span></div>`).join("")}</div>
+            <a href="${href}" class="player-card-button">VIEW PROFILE →</a></article>`;
+    }).join("");
+
+    holder.outerHTML = masters + (cards
+        ? `<div class="players-grid">${cards}</div>`
+        : `<p style="color:var(--muted)">No players in this squad yet.</p>`);
+}
+
+if (document.getElementById("team-name")) loadSquad();
