@@ -1822,7 +1822,7 @@ if (box && player.achievements) {
    MARKET PAGE
 ========================= */
 
-const marketPage = document.querySelector(".market-page");
+const marketPage = null;
 
 if (marketPage) {
     
@@ -2068,7 +2068,7 @@ NEGOTIATIONS PAGE
 ========================= */
 
 const negotiationsPage =
-document.querySelector(".negotiations-page");
+null;
 
 if (negotiationsPage) {
 (() => {
