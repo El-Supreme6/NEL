@@ -60,6 +60,7 @@ const SECTIONS = [
         { n: "saves", l: "Saves", t: "number", def: 0 },
         { n: "mvp", l: "MVP", t: "check" },
         { n: "motm", l: "Man of the match", t: "check" }] },
+    { key: "import", label: "Import stats", roles: E, custom: "import" },
     { key: "news", label: "News", roles: E, table: "news", pk: "id", order: ["published_at", false],
       name: r => [r.title, `${r.category} · ${r.published ? "published" : "draft"}`],
       fields: [
@@ -91,7 +92,7 @@ const SECTIONS = [
         { n: "logo_url", l: "Logo path (e.g. images/rpb.png)", t: "text" },
         { n: "description", l: "Description", t: "textarea" },
         { n: "budget", l: "Budget (millions)", t: "number", def: 50 }] },
-    { key: "offers", label: "Offers", roles: A, custom: true },
+    { key: "offers", label: "Offers", roles: A, custom: "offers" },
     { key: "masters", label: "Masters", roles: A, table: "masters", pk: "discord_id", order: ["created_at", false],
       name: r => [r.name || r.discord_id, nameOf("teams", r.team_id)],
       fields: [
@@ -219,6 +220,106 @@ async function offersEl() {
     return box;
 }
 
+/* ---------- screenshot import: Claude reads the stats table ---------- */
+async function shrink(file) {
+    const bmp = await createImageBitmap(file);
+    const k = Math.min(1, 1600 / Math.max(bmp.width, bmp.height));
+    const c = h("canvas", { width: Math.round(bmp.width * k), height: Math.round(bmp.height * k) });
+    c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height);
+    return c.toDataURL("image/jpeg", 0.85).split(",")[1];
+}
+const norm = s => String(s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+function guessPlayer(name) {
+    const n = norm(name);
+    if (!n) return "";
+    const hit = look.players.find(p => norm(p.l) === n)
+        || look.players.find(p => norm(p.l) && (norm(p.l).includes(n) || n.includes(norm(p.l))));
+    return hit ? hit.v : "";
+}
+
+function importEl() {
+    let rows = [];
+    const matchSel = h("select", {}, h("option", { value: "", textContent: "Choose the match…" }),
+        look.matches.map(m => h("option", { value: m.v, textContent: m.l })));
+    const file = h("input", { type: "file", accept: "image/*" });
+    const status = h("p", { textContent: "Choose the match, add the end-of-match stats screenshot, then tap Read screenshot." });
+    const readBtn = h("button", { className: "primary-button", type: "button", textContent: "Read screenshot" });
+    const saveBtn = h("button", { className: "primary-button", type: "button", textContent: "Save all stats" });
+    const rowsBox = h("div", { style: "margin-top:16px" });
+    saveBtn.style.display = "none";
+
+    const num = (r, k) => h("label", {}, h("span", { textContent: k }),
+        h("input", { type: "number", min: "0", value: r[k] ?? 0, oninput: e => { r[k] = Number(e.target.value) || 0; } }));
+
+    function draw(notes) {
+        rowsBox.replaceChildren();
+        if (!rows.length) { status.textContent = "No players found in that screenshot."; saveBtn.style.display = "none"; return; }
+        status.textContent = `Found ${rows.length} players. Check every row, then save.` + (notes ? " Note: " + notes : "");
+        rows.forEach(r => {
+            const sel = h("select", {}, h("option", { value: "", textContent: "— choose player —" }),
+                look.players.map(p => h("option", { value: p.v, textContent: p.l })));
+            sel.value = r.player_id;
+            sel.onchange = () => { r.player_id = sel.value; };
+            rowsBox.append(h("div", { className: "adm-form", style: "margin-bottom:12px" },
+                h("p", { textContent: `Screenshot name: ${r.name}` }), sel,
+                h("div", { style: "display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:8px;margin-top:12px" },
+                    ["goals", "assists", "intercepts", "passes", "saves"].map(k => num(r, k))),
+                h("label", { className: "chk" }, h("input", { type: "checkbox", onchange: e => { r.mvp = e.target.checked; } }), h("span", { textContent: "MVP" })),
+                h("label", { className: "chk" }, h("input", { type: "checkbox", onchange: e => { r.motm = e.target.checked; } }), h("span", { textContent: "Man of the match" }))));
+        });
+        saveBtn.style.display = "";
+    }
+
+    readBtn.onclick = async () => {
+        if (!matchSel.value) return notify("Choose a match first.", true);
+        if (!file.files[0]) return notify("Choose a screenshot first.", true);
+        notify("");
+        readBtn.disabled = true;
+        status.textContent = "Reading the screenshot… this takes a few seconds.";
+        try {
+            const image = await shrink(file.files[0]);
+            const { data, error } = await db.functions.invoke("analyze-stats", { body: { image } });
+            if (error) {
+                let msg = error.message;
+                try { const j = await error.context.json(); if (j.error) msg = j.error; } catch (_) {}
+                throw new Error(msg);
+            }
+            rows = (data.players || []).map(p => ({ ...p, player_id: guessPlayer(p.name), mvp: false, motm: false }));
+            draw(data.notes);
+        } catch (e) {
+            status.textContent = "";
+            notify(e.message, true);
+        }
+        readBtn.disabled = false;
+    };
+
+    saveBtn.onclick = async () => {
+        const out = rows.filter(r => r.player_id).map(r => ({
+            match_id: matchSel.value, player_id: r.player_id,
+            goals: r.goals || 0, assists: r.assists || 0, intercepts: r.intercepts || 0,
+            passes: r.passes || 0, saves: r.saves || 0, mvp: !!r.mvp, motm: !!r.motm
+        }));
+        if (!out.length) return notify("Choose a player for at least one row.", true);
+        if (new Set(out.map(o => o.player_id)).size !== out.length) return notify("The same player is chosen on two rows.", true);
+        const { error } = await db.from("match_stats").upsert(out, { onConflict: "match_id,player_id" });
+        if (error) return notify(error.message, true);
+        const skipped = rows.length - out.length;
+        notify(`Saved ${out.length} players${skipped ? `, skipped ${skipped} with no player chosen` : ""}.`);
+        rows = [];
+        rowsBox.replaceChildren();
+        saveBtn.style.display = "none";
+        status.textContent = "Done. You can import another screenshot.";
+    };
+
+    return h("div", {},
+        h("div", { className: "adm-form" },
+            h("label", {}, h("span", { textContent: "Match" }), matchSel),
+            h("label", {}, h("span", { textContent: "Stats screenshot" }), file),
+            readBtn, " ", status),
+        rowsBox,
+        h("div", { style: "margin-top:12px" }, saveBtn));
+}
+
 /* ---------- layout ---------- */
 function notify(text, bad) {
     msgEl.textContent = text;
@@ -238,7 +339,7 @@ async function show() {
     })));
 
     panelEl.replaceChildren(h("p", { textContent: "Loading…" }));
-    if (sec.custom) return panelEl.replaceChildren(await offersEl());
+    if (sec.custom) return panelEl.replaceChildren(await (sec.custom === "import" ? importEl() : offersEl()));
     const list = await listEl(sec);
     panelEl.replaceChildren(h("div", { className: "adm-grid" }, formEl(sec, editing), list));
 }
