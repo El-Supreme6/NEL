@@ -779,7 +779,7 @@ document.querySelectorAll("[data-news]").forEach(card => {
    ARTICLE PAGE
 ========================= */
 
-const articlePage = document.querySelector(".article-page");
+const articlePage = null;
 
 if (articlePage) {
     
