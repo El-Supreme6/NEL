@@ -257,7 +257,7 @@ if (countdownElement) {
 ========================= */
 
 const matchPage =
-    document.querySelector(".match-page");
+    null;
 
 
 if (matchPage) {
