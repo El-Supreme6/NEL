@@ -8,6 +8,8 @@ const ICON = { willing: "🟢", unsure: "🟡", unwilling: "🔴" };
 const pad = n => (n == null ? "?" : String(n).padStart(2, "0"));
 const link = p => `negotiations.html?id=${encodeURIComponent(p.slug)}`;
 const note = t => `<p style="color:var(--muted)">${t}</p>`;
+// "All Rounder", "All-Rounder", "allrounder" and "AR" all count as an all rounder
+const isAR = pos => ["allrounder", "ar"].includes(String(pos || "").toLowerCase().replace(/[^a-z]/g, ""));
 
 async function getCtx() {
     const { data: { session } } = await db.auth.getSession();
@@ -75,6 +77,7 @@ async function marketPage() {
 
     const search = $(".market-search input");
     const [posSel, teamSel, sortSel] = $$(".market-controls select");
+    if (![...posSel.options].some(o => o.value === "All Rounder")) posSel.append(new Option("All Rounder", "All Rounder"));
     teamSel.replaceChildren(...["All Teams", ...teams.map(t => t.name), "Free Agents"].map(n => new Option(n, n)));
 
     const when = p => new Date((p.listing && p.listing.listed_at) || 0).getTime();
@@ -83,7 +86,7 @@ async function marketPage() {
     const render = () => {
         const s = search.value.toLowerCase().trim();
         const ok = p => (!s || p.name.toLowerCase().includes(s))
-            && (posSel.value === "All Positions" || p.position === posSel.value)
+            && (posSel.value === "All Positions" || (posSel.value === "All Rounder" ? isAR(p.position) : p.position === posSel.value))
             && (teamSel.value === "All Teams" || (p.team_id ? p.team : "Free Agents") === teamSel.value);
         const sorter = (a, b) => {
             const m = sortSel.value;
@@ -155,7 +158,6 @@ async function negotiationPage() {
     if (!ctx.team_id) return setup("Only club Masters can make offers. Ask staff to add you as a Master.", null, null, false);
     if (ctx.team_id === p.team_id) return setup("This is one of your own players. Manage him from your Account page.", null, null, false);
     if (p.transfer_status === "unwilling") return setup("This player is unwilling to transfer.", null, null, false);
-    if (!free && !listing) return setup("This player is not on the transfer market.", null, null, false);
 
     const { data: mine } = await db.from("teams").select("name,budget").eq("id", ctx.team_id).single();
     const budget = `Your budget: ${M(mine.budget)}.`;
@@ -171,6 +173,7 @@ async function negotiationPage() {
     };
 
     if (free) return setup(`${budget} Free agents cost no transfer fee.`, "SIGN PLAYER →", () => send(0), false);
+    if (!listing) return setup("This player is not on the transfer market.", null, null, false);
     setup(`${budget} Enter your offer in millions.`, "SUBMIT OFFER →", () => {
         const fee = Number(input.value);
         if (!fee || fee <= 0) return say("Enter a valid offer.", true);
