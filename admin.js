@@ -35,13 +35,13 @@ const toLocalInput = iso => {
 /* ---------- what each tab edits ---------- */
 const SECTIONS = [
     { key: "matches", label: "Matches", roles: E, table: "matches", pk: "id", order: ["kickoff", false],
-      name: r => [r.slug, r.status.toUpperCase() + (r.home_score != null ? ` · ${r.home_score}-${r.away_score}` : "")],
+      name: r => [r.slug, `${r.type} · ${r.status.toUpperCase()}${r.home_score != null ? ` · ${r.home_score}-${r.away_score}` : ""}`],
       fields: [
         { n: "slug", l: "Slug (e.g. steelen-livergen)", t: "text", req: 1 },
         { n: "home_team", l: "Home team", t: "select", from: "teams", req: 1 },
         { n: "away_team", l: "Away team", t: "select", from: "teams", req: 1 },
         { n: "kickoff", l: "Kickoff (your local time)", t: "datetime" },
-        { n: "type", l: "Type", t: "text", def: "FRIENDLY" },
+        { n: "type", l: "Competition (only LEAGUE counts for the standings)", t: "select", opts: ["LEAGUE", "FRIENDLY", "CUP"], req: 1, def: "FRIENDLY" },
         { n: "status", l: "Status", t: "select", opts: ["upcoming", "live", "finished"], req: 1, def: "upcoming" },
         { n: "home_score", l: "Home score (needed when finished)", t: "number" },
         { n: "away_score", l: "Away score (needed when finished)", t: "number" },
@@ -98,6 +98,7 @@ const SECTIONS = [
         { n: "discord_id", l: "Discord ID", t: "text", req: 1 },
         { n: "team_id", l: "Club", t: "select", from: "teams", req: 1 },
         { n: "name", l: "Name", t: "text" }] },
+    { key: "season", label: "Season", roles: O, custom: "season" },
     { key: "staff", label: "Staff", roles: O, table: "staff", pk: "discord_id", order: ["created_at", false],
       name: r => [r.name || r.discord_id, r.role],
       fields: [
@@ -197,8 +198,8 @@ async function offersEl() {
         .order("updated_at", { ascending: false }).limit(100);
     if (error) { box.append(h("p", { textContent: error.message })); return box; }
     if (!data.length) box.append(h("p", { textContent: "No offers yet." }));
-    const act = async (fn, id, key = "p_offer") => {
-        const { error: err } = await db.rpc(fn, { [key]: id });
+    const act = async (fn, id) => {
+        const { error: err } = await db.rpc(fn, { p_offer: id });
         if (err) return notify(err.message, true);
         notify("Done.");
         show();
@@ -213,20 +214,51 @@ async function offersEl() {
         box.append(h("div", { className: "adm-row" },
             h("div", {},
                 h("strong", { textContent: `${o.player ? o.player.name : "?"} → ${o.buyer ? o.buyer.name : "?"}` }), h("br"),
-                h("small", { textContent: `${o.seller ? "From " + o.seller.name : "Free agent"} · ${o.kind === "loan" ? "LOAN · " + o.loan_matches + " matches" : o.fee + "M"} · ${o.status.toUpperCase()}` })),
+                h("small", { textContent: `${o.seller ? "From " + o.seller.name : "Free agent"} · ${o.fee}M · ${o.status.toUpperCase()}` })),
             actions));
     });
 
-    const { data: loans } = await db.from("loans")
-        .select("*, player:players(name), src:teams!from_team(name), dst:teams!to_team(name)").eq("status", "active");
-    box.append(h("h3", { textContent: "ACTIVE LOANS", style: "margin:24px 0 4px" }));
-    if (!(loans || []).length) box.append(h("p", { textContent: "No active loans." }));
-    (loans || []).forEach(l => box.append(h("div", { className: "adm-row" },
-        h("div", {}, h("strong", { textContent: `${l.player ? l.player.name : "?"}: ${l.src ? l.src.name : "?"} → ${l.dst ? l.dst.name : "?"}` }), h("br"),
-            h("small", { textContent: `${l.matches_played}/${l.matches_total} matches played` })),
-        h("div", { className: "adm-actions" },
-            h("button", { className: "reject-button", textContent: "End loan", onclick: () => act("end_loan", l.id, "p_loan") })))));
     return box;
+}
+
+/* ---------- end of season (owner only) ---------- */
+async function seasonEl() {
+    const [mt, sn] = await Promise.all([
+        db.from("matches").select("id,type,status"),
+        db.from("seasons").select("id,name,champion,ended_at").order("ended_at", { ascending: false })
+    ]);
+    const ms = mt.data || [];
+    const league = ms.filter(m => m.status === "finished" && String(m.type).trim().toUpperCase() === "LEAGUE").length;
+    const name = h("input", { type: "text", placeholder: "e.g. Season 1" });
+    const typed = h("input", { type: "text", placeholder: "type END SEASON" });
+    const btn = h("button", { className: "primary-button", type: "button", textContent: "End season and save to history" });
+
+    btn.onclick = async () => {
+        if (!name.value.trim()) return notify("Give the season a name.", true);
+        if (typed.value.trim() !== "END SEASON") return notify("Type END SEASON in the confirm box.", true);
+        btn.disabled = true;
+        const { error } = await db.rpc("end_season", { p_name: name.value.trim() });
+        btn.disabled = false;
+        if (error) return notify(error.message, true);
+        await loadLookups();
+        notify("Season saved to history. A new season has started.");
+        show();
+    };
+
+    const past = (sn.data || []).map(s => h("div", { className: "adm-row" },
+        h("div", {}, h("strong", { textContent: s.name }), h("br"),
+            h("small", { textContent: (s.champion ? "Champion: " + s.champion + " · " : "") + new Date(s.ended_at).toLocaleDateString("en-GB") })),
+        h("a", { className: "secondary-button", href: "history.html?season=" + s.id, textContent: "View" })));
+
+    return h("div", { className: "adm-grid" },
+        h("div", { className: "adm-form" },
+            h("p", { textContent: `This season has ${ms.length} matches, ${league} of them finished LEAGUE matches.` }),
+            h("p", { textContent: "Ending the season saves the final standings, every result, every player's stats in every match, the awards and the transfers to NEL history, even if clubs or players are deleted later. Then the matches and transfer log are cleared so the new season starts from zero. Player values carry over. This cannot be undone." }),
+            h("label", {}, h("span", { textContent: "Season name" }), name),
+            h("label", {}, h("span", { textContent: "Confirm" }), typed),
+            btn),
+        h("div", { className: "adm-list" }, h("h2", { textContent: "HISTORY" }),
+            past.length ? past : h("p", { textContent: "No past seasons yet." })));
 }
 
 /* ---------- layout ---------- */
@@ -248,7 +280,7 @@ async function show() {
     })));
 
     panelEl.replaceChildren(h("p", { textContent: "Loading…" }));
-    if (sec.custom) return panelEl.replaceChildren(await offersEl());
+    if (sec.custom) return panelEl.replaceChildren(await (sec.custom === "season" ? seasonEl() : offersEl()));
     const list = await listEl(sec);
     panelEl.replaceChildren(h("div", { className: "adm-grid" }, formEl(sec, editing), list));
 }
