@@ -15,13 +15,16 @@ window.nelLogin = () => {
 (() => {
     const justLoggedIn = new URLSearchParams(location.search).has("code");
     const nav = document.querySelector(".nav-links");
-    if (nav && !nav.querySelector('a[href="account.html"]')) {
+    const add = (href, text) => {
+        if (!nav || nav.querySelector(`a[href="${href}"]`)) return;
         const a = document.createElement("a");
-        a.href = "account.html";
-        a.textContent = "Account";
-        if (location.pathname.endsWith("account.html")) a.classList.add("active");
+        a.href = href;
+        a.textContent = text;
+        if (location.pathname.endsWith(href)) a.classList.add("active");
         nav.append(a);
-    }
+    };
+    add("history.html", "History");
+    add("account.html", "Account");
     db.auth.getSession().then(({ data: { session } }) => {
         const back = sessionStorage.getItem("nel-return");
         if (!back) return;
