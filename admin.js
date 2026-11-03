@@ -46,6 +46,7 @@ const SECTIONS = [
         { n: "home_score", l: "Home score (needed when finished)", t: "number" },
         { n: "away_score", l: "Away score (needed when finished)", t: "number" },
         { n: "venue", l: "Venue", t: "text", def: "TBD" },
+        { n: "referee", l: "Referee", t: "text" },
         { n: "description", l: "Description", t: "textarea" },
         { n: "featured", l: "Featured match", t: "check" }] },
     { key: "stats", label: "Match stats", roles: E, table: "match_stats", pk: "id", order: ["id", false], conflict: "match_id,player_id",
