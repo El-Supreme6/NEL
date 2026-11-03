@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="icon" href="images/nel-logo.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>History | Neo Egoist League</title>
+    <meta name="description" content="Every past Neo Egoist League season: standings, results, awards and stats.">
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .hx-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:40px}
+        .hx-block{margin-bottom:64px}
+        .hx-match{background:var(--panel);border:1px solid var(--line);margin-bottom:8px}
+        .hx-match summary{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;padding:16px 20px;cursor:pointer;list-style:none}
+        .hx-match summary::-webkit-details-marker{display:none}
+        .hx-match summary span{font:600 11px/1 var(--body);letter-spacing:.2em;text-transform:uppercase;color:var(--cyan)}
+        .hx-match summary strong{font:700 22px/1.1 var(--display);letter-spacing:.07em;text-transform:uppercase;color:var(--white)}
+        .hx-match summary small{margin-left:auto;color:var(--muted)}
+        .hx-match[open]{border-color:var(--cyan-dim)}
+        .hx-body{padding:0 20px 20px}
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+
+        <a href="index.html" class="logo">
+            <img src="images/nel-logo.png" alt="NEL Logo">
+        </a>
+
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="matches.html">Matches</a>
+            <a href="standings.html">Standings</a>
+            <a href="teams.html">Teams</a>
+            <a href="players.html">Players</a>
+            <a href="market.html">Market</a>
+            <a href="stats.html">Stats</a>
+            <a href="news.html">News</a>
+            <a href="about.html">About</a>
+        </div>
+
+        <a class="discord-button" href="https://discord.gg/FYT7ujxwv" target="_blank" rel="noopener">
+            Discord
+        </a>
+
+        <button class="menu-toggle" aria-label="Open navigation menu">
+            ☰
+        </button>
+
+    </nav>
+
+    <main>
+
+        <section class="stats-header">
+            <p class="eyebrow">NEO EGOIST LEAGUE</p>
+            <h1>HISTORY</h1>
+            <p class="stats-description">Every finished season: final table, results, awards and player stats.</p>
+        </section>
+
+        <div class="section" id="history-app">
+            <p>Loading…</p>
+        </div>
+
+    </main>
+
+    <footer>
+        <h2>NEL</h2>
+        <p>ONE LEAGUE. ONE GOAL. BECOME THE BEST.</p>
+        <small>© 2026 Neo Egoist League</small>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.js"></script>
+    <script src="supabase.js"></script>
+    <script src="script.js"></script>
+    <script src="history.js"></script>
+
+</body>
+</html>
