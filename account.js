@@ -8,7 +8,7 @@ const h = (tag, props = {}, ...kids) => {
     return el;
 };
 const M = v => `${+Number(v).toFixed(2)}M`;
-let ctx = null, msgEl, body;
+let ctx = null, sess = null, msgEl, body;
 
 const say = (text, bad) => {
     msgEl.textContent = text;
@@ -108,9 +108,24 @@ function offerRow(o) {
         actions);
 }
 
+/* ---------- bio (everyone) ---------- */
+async function bioSection() {
+    const { data } = await db.from("profiles").select("bio").eq("user_id", sess.user.id).maybeSingle();
+    const box = h("textarea", {
+        maxLength: 300, rows: 4, value: (data && data.bio) || "",
+        placeholder: "Write something about yourself (max 300 characters)",
+        style: "width:100%;min-height:110px;padding:10px 12px;margin-bottom:14px;background:var(--bg);border:1px solid var(--line);border-radius:0;color:var(--white);font-size:16px"
+    });
+    return h("div", { className: "adm-form" },
+        h("h2", { textContent: "MY BIO" }),
+        h("p", { textContent: "Shown on your player profile if you are a player, and on your club page if you are a Master." }),
+        box,
+        h("button", { className: "primary-button", textContent: "Save bio", onclick: () => run("set_my_bio", { p_bio: box.value }, "Bio saved.") }));
+}
+
 /* ---------- page ---------- */
 async function build() {
-    const parts = [];
+    const parts = [await bioSection()];
     if (ctx.player_id) parts.push(await playerSection());
     if (ctx.team_id) parts.push(...await masterSections());
     if (!ctx.player_id && !ctx.team_id) parts.push(h("div", { className: "adm-form" },
@@ -131,6 +146,7 @@ async function boot() {
     const { data, error } = await db.rpc("my_context");
     if (error) return app.replaceChildren(h("div", { className: "adm-form" }, h("p", { textContent: "Could not load your account: " + error.message })));
     ctx = data;
+    sess = session;
 
     const m = session.user.user_metadata || {};
     const roles = [ctx.staff_role && ctx.staff_role.toUpperCase(), ctx.team_id && "MASTER", ctx.player_id && "PLAYER"].filter(Boolean).join(" · ");
