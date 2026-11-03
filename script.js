@@ -2708,6 +2708,14 @@ async function loadMatchPage() {
     set("#match-date", d ? `${fmtDM(d)} · ${fmtTime(d)}` : "Date TBA");
     set("#detail-date", d ? fmtDM(d) : "TBA"); set("#detail-time", d ? fmtTime(d) : "TBA");
     set("#detail-competition", m.type); set("#detail-venue", m.venue || "TBD");
+if (!document.getElementById("detail-referee")) {
+    const venueCard = document.getElementById("detail-venue").closest(".match-detail-card");
+    const refCard = venueCard.cloneNode(true);
+    refCard.querySelector("span").textContent = "REFEREE";
+    refCard.querySelector("strong").id = "detail-referee";
+    venueCard.after(refCard);
+}
+set("#detail-referee", m.referee || "TBA");
     set("#match-description", m.description ||
         (done ? `${m.home.name} ${m.home_score}-${m.away_score} ${m.away.name}.` : `${m.home.name} face ${m.away.name}.`));
 
