@@ -2909,3 +2909,45 @@ async function loadSquad() {
 }
 
 if (document.getElementById("team-name")) loadSquad();
+
+/* =========================
+   REFEREE CARD + MASTER BIO (nothing else to edit)
+========================= */
+
+if (document.querySelector(".match-page")) (async () => {
+    const slug = new URLSearchParams(location.search).get("id");
+    const { data } = await db.from("matches").select("referee").eq("slug", slug || "").maybeSingle();
+    const venue = document.getElementById("detail-venue");
+    if (!data || !venue || document.getElementById("detail-referee")) return;
+    const card = venue.closest(".match-detail-card");
+    const ref = card.cloneNode(true);
+    ref.querySelector("span").textContent = "REFEREE";
+    const val = ref.querySelector("strong");
+    val.id = "detail-referee";
+    val.textContent = data.referee || "TBA";
+    card.after(ref);
+})();
+
+if (document.getElementById("team-name")) (async () => {
+    const slug = new URLSearchParams(location.search).get("id");
+    const { data: team } = await db.from("teams").select("id").eq("slug", slug || "").maybeSingle();
+    if (!team) return;
+    const { data: ms } = await db.from("team_masters").select("name,bio").eq("team_id", team.id);
+    const bios = Object.fromEntries((ms || []).filter(m => m.bio).map(m => [m.name, m.bio]));
+    if (!Object.keys(bios).length) return;
+    let tries = 0;
+    const timer = setInterval(() => {
+        const cards = document.querySelectorAll(".master-card");
+        if (!cards.length && ++tries < 40) return;
+        clearInterval(timer);
+        cards.forEach(c => {
+            const title = c.querySelector("h3");
+            const bio = title && bios[title.textContent.trim()];
+            if (!bio || c.querySelector("p")) return;
+            const p = document.createElement("p");
+            p.style.cssText = "color:var(--muted);margin-top:8px";
+            p.textContent = bio;
+            title.after(p);
+        });
+    }, 150);
+})();
